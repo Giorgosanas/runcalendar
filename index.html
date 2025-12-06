@@ -670,27 +670,34 @@
   }
 
   saveBtn.addEventListener('click', async () => {
-    if (!selectedDateKey) return;
-    const runs = getStorage();
-    const runObj = {
-      type: runTypeEl.value,
-      plannedDistance: plannedDistanceEl.value ? parseFloat(plannedDistanceEl.value) : null,
-      plannedPace: plannedPaceEl.value || null,
-      actualDistance: actualDistanceEl.value ? parseFloat(actualDistanceEl.value) : null,
-      actualPace: actualPaceEl.value || null,
-      rpe: rpeEl.value ? parseInt(rpeEl.value, 10) : null,
-      notes: notesEl.value || ''
-    };
-    runs[selectedDateKey] = runObj;
+  if (!selectedDateKey) return;
 
-    setStorage(runs);
-    renderCalendar();
-    closeModal();
+  // keep a copy BEFORE we clear it
+  const dateKey = selectedDateKey;
 
-    if (currentUser) {
-      await saveRunToSupabase(currentUser.id, selectedDateKey, runObj);
-    }
-  });
+  const runs = getStorage();
+  const runObj = {
+    type: runTypeEl.value,
+    plannedDistance: plannedDistanceEl.value ? parseFloat(plannedDistanceEl.value) : null,
+    plannedPace: plannedPaceEl.value || null,
+    actualDistance: actualDistanceEl.value ? parseFloat(actualDistanceEl.value) : null,
+    actualPace: actualPaceEl.value || null,
+    rpe: rpeEl.value ? parseInt(rpeEl.value, 10) : null,
+    notes: notesEl.value || ''
+  };
+
+  runs[dateKey] = runObj;
+  setStorage(runs);
+  renderCalendar();
+
+  // close modal AFTER we already stored dateKey
+  closeModal();
+
+  if (currentUser) {
+    await saveRunToSupabase(currentUser.id, dateKey, runObj);
+  }
+});
+
 
   deleteBtn.addEventListener('click', async () => {
     if (!selectedDateKey) return;
@@ -900,3 +907,4 @@
 </script>
 </body>
 </html>
+
