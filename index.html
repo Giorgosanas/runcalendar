@@ -524,32 +524,78 @@
       z-index: 15;
     }
 
-    @media (max-width: 900px) {
-      .stats-grid {
-        grid-template-columns: minmax(0,1fr);
-      }
-    }
-
     @media (max-width: 700px) {
-      main { padding: 0.6rem; }
-      .calendar { gap: 2px; }
-      .day { min-height: 64px; padding: 0.25rem; }
-      .weekday { font-size: 0.7rem; }
-      .auth-bar input {
-        flex: 1 1 100%;
-      }
-      .toolbar {
-        flex-direction: column;
-      }
-      .toolbar-group {
-        border-radius: 12px;
-      }
-      .fab-today {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.2rem;
-      }
-    }
+  main {
+    padding: 0.6rem;
+  }
+
+  .calendar {
+    gap: 2px;
+  }
+
+  .day {
+    min-height: 64px;
+    padding: 0.25rem;
+  }
+
+  .weekday {
+    font-size: 0.7rem;
+  }
+
+  /* Header: stop being sticky on mobile */
+  header {
+    position: static;
+    top: auto;
+    box-shadow: none;
+  }
+
+  /* Auth bar: stack nicely */
+  .auth-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .auth-bar input,
+  .auth-bar button,
+  .auth-bar .sync-status {
+    width: 100%;
+  }
+
+  /* Toolbar: each group full width, controls stacked */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-group {
+    border-radius: 12px;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-group label {
+    margin-top: 0.25rem;
+  }
+
+  .toolbar-group label:first-child {
+    margin-top: 0;
+  }
+
+  .toolbar-group select,
+  .toolbar-group input,
+  .toolbar-group button {
+    width: 100%;
+  }
+
+  /* Floating Today button visible on mobile */
+  .fab-today {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+}
+
   </style>
 </head>
 <body data-theme="dark">
