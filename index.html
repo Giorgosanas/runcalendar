@@ -68,7 +68,6 @@
       justify-content: space-between;
       align-items: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
     }
 
     header h1 {
@@ -82,7 +81,6 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      flex-wrap: nowrap;
     }
 
     header button {
@@ -96,7 +94,6 @@
       display: inline-flex;
       align-items: center;
       gap: 0.2rem;
-      white-space: nowrap;
     }
 
     header button:hover {
@@ -189,7 +186,6 @@
       gap: 0.4rem;
       font-size: 0.8rem;
       backdrop-filter: blur(10px);
-      flex-wrap: wrap;
     }
 
     body[data-theme="light"] .toolbar-group {
@@ -199,12 +195,10 @@
     .toolbar-group label {
       font-size: 0.78rem;
       color: var(--text-muted);
-      white-space: nowrap;
     }
 
     .toolbar-group select,
-    .toolbar-group input[type="date"],
-    .toolbar-group input[type="text"] {
+    .toolbar-group input[type="date"] {
       border-radius: 999px;
       border: 1px solid var(--border);
       padding: 0.2rem 0.4rem;
@@ -394,6 +388,12 @@
 
     textarea { resize: vertical; }
 
+    .help-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
     .form-actions {
       display: flex;
       justify-content: space-between;
@@ -483,7 +483,6 @@
       justify-content: space-between;
       align-items: center;
       gap: 0.4rem;
-      flex-wrap: wrap;
     }
 
     .stats-header-row select {
@@ -495,132 +494,60 @@
       color: var(--text-muted);
     }
 
-    /* ---------- Medium screens ---------- */
+    #shoeSummary, #sleepFatigueSummary {
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    #shoeSummary ul {
+      padding-left: 1.1rem;
+      margin: 0.2rem 0 0;
+    }
+
+    #shoeSummary li {
+      margin-bottom: 0.1rem;
+    }
+
+    .fab-today {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      border-radius: 999px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.85rem;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 15;
+    }
+
     @media (max-width: 900px) {
       .stats-grid {
         grid-template-columns: minmax(0,1fr);
       }
     }
 
-    /* ---------- Phone / small screens ---------- */
     @media (max-width: 700px) {
-      body {
-        font-size: 14px;
-      }
-
-      main {
-        padding: 0.6rem;
-      }
-
-      .header-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .header-controls {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .auth-bar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
+      main { padding: 0.6rem; }
+      .calendar { gap: 2px; }
+      .day { min-height: 64px; padding: 0.25rem; }
+      .weekday { font-size: 0.7rem; }
       .auth-bar input {
-        flex: 1 1 auto;
-        width: 100%;
+        flex: 1 1 100%;
       }
-
-      .auth-bar button {
-        width: 100%;
-        justify-content: center;
-      }
-
       .toolbar {
         flex-direction: column;
       }
-
       .toolbar-group {
         border-radius: 12px;
-        width: 100%;
       }
-
-      .toolbar-group select,
-      .toolbar-group input[type="date"],
-      .toolbar-group input[type="text"] {
-        width: 100%;
-      }
-
-      .toolbar-group button {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .calendar-card {
-        padding: 0.6rem;
-      }
-
-      .calendar {
-        gap: 2px;
-      }
-
-      .day {
-        min-height: 60px;
-        padding: 0.25rem;
-      }
-
-      .weekday {
-        font-size: 0.7rem;
-      }
-
-      .stats {
-        padding: 0.6rem 0.7rem;
-      }
-
-      .chart-container {
-        padding: 0.3rem;
-      }
-    }
-
-    /* Extra-tight for very small screens */
-    @media (max-width: 480px) {
-      header {
-        padding: 0.6rem 0.7rem 0.7rem;
-      }
-
-      header h1 {
-        font-size: 0.95rem;
-      }
-
-      .header-controls button {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-      }
-
-      #monthLabel {
-        font-size: 0.8rem;
-      }
-
-      .auth-bar {
-        gap: 0.3rem;
-      }
-
-      .calendar-card {
-        border-radius: 12px;
-      }
-
-      .stats-grid {
-        gap: 0.6rem;
-      }
-
-      .modal {
-        padding: 0.8rem 0.9rem;
-      }
-
-      .btn {
-        font-size: 0.8rem;
-        padding: 0.35rem 0.6rem;
+      .fab-today {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
       }
     }
   </style>
@@ -703,7 +630,7 @@
   </div>
 
   <div class="stats-grid">
-    <!-- Week summary + streaks + PDF -->
+    <!-- Week summary + streaks + PDF + shoes + sleep -->
     <div class="stats" id="statsBox">
       <h3>This Week</h3>
       <div class="stats-row">
@@ -726,6 +653,8 @@
         <span class="label">Best streak</span>
         <span id="streakBest">0 days</span>
       </div>
+      <div id="sleepFatigueSummary"></div>
+      <div id="shoeSummary"></div>
       <button class="btn btn-primary" id="pdfBtn" style="margin-top:0.6rem;">Download month report (PDF)</button>
     </div>
 
@@ -747,10 +676,15 @@
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="weekPaceCanvas" height="120"></canvas>
       </div>
+      <div class="chart-container" style="margin-top:0.45rem;">
+        <canvas id="rpePaceCanvas" height="120"></canvas>
+      </div>
       <p id="coachAdvice"></p>
     </div>
   </div>
 </main>
+
+<button class="fab-today" id="todayFab">📅 Today</button>
 
 <!-- Modal -->
 <div class="modal-backdrop" id="modalBackdrop">
@@ -768,13 +702,25 @@
         <option value="Long">Long</option>
       </select>
     </div>
+
+    <div class="form-group">
+      <label>Workout template (optional)</label>
+      <select id="workoutTemplate">
+        <option value="">None</option>
+        <option value="4x400_1k_tempo">4×400m + 1 km tempo</option>
+        <option value="6x800_vo2">6×800m VO₂</option>
+        <option value="tempo20">20 min tempo</option>
+      </select>
+      <div class="help-text" id="templateHint"></div>
+    </div>
+
     <div class="form-group">
       <label>Planned distance (km)</label>
       <input type="number" step="0.1" id="plannedDistance" />
     </div>
     <div class="form-group">
       <label>Planned pace (min/km)</label>
-      <input type="text" id="plannedPace" placeholder="e.g. 6:00" />
+      <input type="text" id="plannedPace" placeholder="e.g. 6:00 or 5:30–5:40" />
     </div>
     <div class="form-group">
       <label>Actual distance (km)</label>
@@ -785,8 +731,21 @@
       <input type="text" id="actualPace" placeholder="e.g. 5:50" />
     </div>
     <div class="form-group">
-      <label>How it felt (1–10)</label>
+      <label>How it felt (RPE 1–10)</label>
       <input type="number" min="1" max="10" id="rpe" />
+    </div>
+    <div class="form-group">
+      <label>Shoe</label>
+      <input type="text" id="shoe" placeholder="e.g. Pegasus 41" list="shoeOptions" />
+      <datalist id="shoeOptions"></datalist>
+    </div>
+    <div class="form-group">
+      <label>Sleep quality (1–10)</label>
+      <input type="number" min="1" max="10" id="sleep" />
+    </div>
+    <div class="form-group">
+      <label>Fatigue (1–10)</label>
+      <input type="number" min="1" max="10" id="fatigue" />
     </div>
     <div class="form-group">
       <label>Notes (route, weather, splits…)</label>
@@ -834,16 +793,44 @@
     }
   };
 
+  // Structured workout templates
+  const WORKOUT_TEMPLATES = {
+    '4x400_1k_tempo': {
+      name: '4×400m + 1 km tempo',
+      type: 'Intervals',
+      totalDistance: 1 + 4 * 0.4 + 1 + 1, // warmup + reps + tempo + cooldown
+      pace: 'See parts',
+      notes:
+        '1 km easy warmup, then 4 × 400 m @ 4:50–5:05 with 90s rest, then 1 km tempo @ 5:20–5:40, then 1 km easy cooldown.'
+    },
+    '6x800_vo2': {
+      name: '6×800m VO₂',
+      type: 'Intervals',
+      totalDistance: 2 + 6 * 0.8 + 1, // 2 km WU, 6x800, 1 km CD
+      pace: 'See parts',
+      notes:
+        '2 km easy warmup, then 6 × 800 m @ 5K pace with 2 min jog/walk, then 1 km easy cooldown.'
+    },
+    'tempo20': {
+      name: '20 min tempo',
+      type: 'Tempo',
+      totalDistance: 1 + 1 + 4, // approximate 20 min tempo as ~4 km
+      pace: 'Tempo effort',
+      notes:
+        '1 km easy warmup, then 20 min tempo at comfortably hard pace (can say 1–2 words), then 1 km easy cooldown (~4 km total).'
+    }
+  };
+
   // Training plans: generator + which weekdays to use (priority order)
   // dow: 0=Mon ... 6=Sun
   const TRAINING_PLANS = {
     '5k-beginner': {
       name: '5K Beginner',
-      daysOrder: [6, 2, 0, 4], // Long, Tempo, Mon easy, Fri easy
+      daysOrder: [6, 2, 0, 4],
       generator: (week, totalWeeks, dow) => {
         const progress = totalWeeks > 1 ? week / (totalWeeks - 1) : 0;
-        const longDist = 4 + Math.round(progress * 4);      // ~4→8 km
-        const easyDist = 3 + Math.round(progress * 2);      // ~3→5 km
+        const longDist = 4 + Math.round(progress * 4);
+        const easyDist = 3 + Math.round(progress * 2);
 
         if (dow === 0) return { type: 'Easy', dist: easyDist, pace: '6:20', notes: 'Easy conversational run.' };
         if (dow === 2) return { type: 'Tempo', dist: 3, pace: '5:40', notes: 'Short tempo in the middle.' };
@@ -854,11 +841,11 @@
     },
     '10k-build': {
       name: '10K Build',
-      daysOrder: [6, 4, 2, 0], // Long, Tempo, Intervals, Easy
+      daysOrder: [6, 4, 2, 0],
       generator: (week, totalWeeks, dow) => {
         const progress = totalWeeks > 1 ? week / (totalWeeks - 1) : 0;
-        const longDist = 6 + Math.round(progress * 8);      // ~6→14 km
-        const midLong = 5 + Math.round(progress * 4);       // ~5→9 km
+        const longDist = 6 + Math.round(progress * 8);
+        const midLong = 5 + Math.round(progress * 4);
 
         if (dow === 0) return { type: 'Easy', dist: 5, pace: '6:15', notes: 'Relaxed easy run.' };
         if (dow === 2) return { type: 'Intervals', dist: 6, pace: '5:20', notes: 'Intervals or fartlek session.' };
@@ -869,12 +856,12 @@
     },
     'hm-12w': {
       name: 'Half Marathon',
-      daysOrder: [6, 4, 2, 0, 3], // Long, Tempo, Intervals, Mon easy, Wed easy
+      daysOrder: [6, 4, 2, 0, 3],
       generator: (week, totalWeeks, dow) => {
         const progress = totalWeeks > 1 ? week / (totalWeeks - 1) : 0;
-        const longDist = 8 + Math.round(progress * 13);     // ~8→21 km
-        const easyDist = 6 + Math.round(progress * 3);      // ~6→9 km
-        const midLong = 10 + Math.round(progress * 5);      // ~10→15 km
+        const longDist = 8 + Math.round(progress * 13);
+        const easyDist = 6 + Math.round(progress * 3);
+        const midLong = 10 + Math.round(progress * 5);
 
         if (dow === 0) return { type: 'Easy', dist: easyDist, pace: '6:10', notes: 'Recovery from long run.' };
         if (dow === 2) return { type: 'Intervals', dist: 8, pace: '5:20', notes: 'Interval or VO2 session.' };
@@ -886,12 +873,12 @@
     },
     'marathon': {
       name: 'Marathon',
-      daysOrder: [6, 4, 2, 0, 3], // Long, Tempo, Intervals, Mon easy, Wed easy
+      daysOrder: [6, 4, 2, 0, 3],
       generator: (week, totalWeeks, dow) => {
         const progress = totalWeeks > 1 ? week / (totalWeeks - 1) : 0;
-        const longDist = 14 + Math.round(progress * 18);     // ~14→32 km
-        const easyDist = 8 + Math.round(progress * 4);       // ~8→12 km
-        const midLong = 12 + Math.round(progress * 6);       // ~12→18 km
+        const longDist = 14 + Math.round(progress * 18);
+        const easyDist = 8 + Math.round(progress * 4);
+        const midLong = 12 + Math.round(progress * 6);
 
         if (dow === 0) return { type: 'Easy', dist: easyDist, pace: '6:15', notes: 'Easy recovery from long run.' };
         if (dow === 2) return { type: 'Intervals', dist: 10, pace: '5:15', notes: 'Speed / VO2 session.' };
@@ -911,11 +898,17 @@
   const modalBackdrop = document.getElementById('modalBackdrop');
   const modalDateEl = document.getElementById('modalDate');
   const runTypeEl = document.getElementById('runType');
+  const workoutTemplateEl = document.getElementById('workoutTemplate');
+  const templateHintEl = document.getElementById('templateHint');
   const plannedDistanceEl = document.getElementById('plannedDistance');
   const plannedPaceEl = document.getElementById('plannedPace');
   const actualDistanceEl = document.getElementById('actualDistance');
   const actualPaceEl = document.getElementById('actualPace');
   const rpeEl = document.getElementById('rpe');
+  const shoeEl = document.getElementById('shoe');
+  const shoeOptionsEl = document.getElementById('shoeOptions');
+  const sleepEl = document.getElementById('sleep');
+  const fatigueEl = document.getElementById('fatigue');
   const notesEl = document.getElementById('notes');
   const saveBtn = document.getElementById('saveBtn');
   const closeBtn = document.getElementById('closeBtn');
@@ -927,6 +920,9 @@
 
   const streakCurrentEl = document.getElementById('streakCurrent');
   const streakBestEl = document.getElementById('streakBest');
+
+  const sleepFatigueSummaryEl = document.getElementById('sleepFatigueSummary');
+  const shoeSummaryEl = document.getElementById('shoeSummary');
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
 
@@ -944,6 +940,7 @@
 
   const weekDistanceCanvas = document.getElementById('weekDistanceCanvas');
   const weekPaceCanvas = document.getElementById('weekPaceCanvas');
+  const rpePaceCanvas = document.getElementById('rpePaceCanvas');
 
   const planSelect = document.getElementById('planSelect');
   const planStartDateInput = document.getElementById('planStartDate');
@@ -959,9 +956,11 @@
   const backToMeBtn = document.getElementById('backToMeBtn');
 
   const coachLangSelect = document.getElementById('coachLangSelect');
+  const todayFab = document.getElementById('todayFab');
 
   let weekDistanceChart = null;
   let weekPaceChart = null;
+  let rpePaceChart = null;
 
   let currentMonth = new Date();
   currentMonth.setDate(1);
@@ -1022,7 +1021,6 @@
 
   // STORAGE
   function getStorage() {
-    // If we are in friend view, use in-memory friend cache
     if (friendMode) {
       return friendRunsCache || {};
     }
@@ -1033,7 +1031,6 @@
   }
 
   function setStorage(data) {
-    // In friend mode we don't write to localStorage, just update in-memory cache
     if (friendMode) {
       friendRunsCache = data;
       return;
@@ -1064,7 +1061,7 @@
 
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
-    const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
+    const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const runs = getStorage();
     const todayKey = formatDateKey(new Date());
@@ -1120,7 +1117,7 @@
 
       cell.addEventListener('click', () => {
         if (friendMode) {
-          alert('You are viewing a friend\'s calendar (read-only).');
+          alert("You are viewing a friend's calendar (read-only).");
           return;
         }
         openModal(key);
@@ -1140,11 +1137,17 @@
     modalDateEl.textContent = `${d}/${m}/${y}`;
 
     runTypeEl.value = run.type || 'Rest';
+    workoutTemplateEl.value = '';
+    templateHintEl.textContent = '';
+
     plannedDistanceEl.value = run.plannedDistance ?? '';
     plannedPaceEl.value = run.plannedPace ?? '';
     actualDistanceEl.value = run.actualDistance ?? '';
     actualPaceEl.value = run.actualPace ?? '';
     rpeEl.value = run.rpe ?? '';
+    shoeEl.value = run.shoe ?? '';
+    sleepEl.value = run.sleep ?? '';
+    fatigueEl.value = run.fatigue ?? '';
     notesEl.value = run.notes ?? '';
 
     modalBackdrop.classList.add('show');
@@ -1154,6 +1157,32 @@
     modalBackdrop.classList.remove('show');
     selectedDateKey = null;
   }
+
+  // Workout template application
+  workoutTemplateEl.addEventListener('change', () => {
+    const tplId = workoutTemplateEl.value;
+    const tpl = WORKOUT_TEMPLATES[tplId];
+    if (!tpl) {
+      templateHintEl.textContent = '';
+      return;
+    }
+    templateHintEl.textContent = tpl.name + ' – auto-filled into this run.';
+
+    if (!runTypeEl.value || runTypeEl.value === 'Rest') {
+      runTypeEl.value = tpl.type;
+    }
+    if (!plannedDistanceEl.value && tpl.totalDistance) {
+      plannedDistanceEl.value = tpl.totalDistance.toFixed(1);
+    }
+    if (!plannedPaceEl.value && tpl.pace) {
+      plannedPaceEl.value = tpl.pace;
+    }
+    if (!notesEl.value) {
+      notesEl.value = tpl.notes;
+    } else {
+      notesEl.value += (notesEl.value.endsWith('\n') ? '' : '\n') + tpl.notes;
+    }
+  });
 
   // SAVE / DELETE
   saveBtn.addEventListener('click', async () => {
@@ -1175,8 +1204,11 @@
       actualDistance: actualDistanceEl.value ? parseFloat(actualDistanceEl.value) : null,
       actualPace: actualPaceEl.value || null,
       rpe: rpeEl.value ? parseInt(rpeEl.value, 10) : null,
+      shoe: shoeEl.value || null,
+      sleep: sleepEl.value ? parseInt(sleepEl.value, 10) : null,
+      fatigue: fatigueEl.value ? parseInt(fatigueEl.value, 10) : null,
       notes: notesEl.value || '',
-      planId: existing ? existing.planId || null : null // keep planId if it was from a plan
+      planId: existing ? existing.planId || null : null
     };
 
     runs[dateKey] = runObj;
@@ -1222,10 +1254,19 @@
     renderCalendar();
   });
 
+  // Today FAB
+  todayFab.addEventListener('click', () => {
+    const today = new Date();
+    currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    renderCalendar();
+    const todayKey = formatDateKey(today);
+    if (!friendMode) openModal(todayKey);
+  });
+
   // WEEK STATS
   function updateThisWeekStats(runs) {
     const now = new Date();
-    const dayOfWeek = (now.getDay() + 6) % 7; // Mon=0
+    const dayOfWeek = (now.getDay() + 6) % 7;
     const monday = new Date(now);
     monday.setDate(now.getDate() - dayOfWeek);
 
@@ -1252,13 +1293,12 @@
     statsRuns.textContent = runCount;
   }
 
-  // STREAKS (simple: count consecutive days backwards from today)
+  // STREAKS
   function updateStreaks(runs) {
     const today = new Date();
     let currentStreak = 0;
     let bestStreak = 0;
 
-    // compute best streak over last 365 days
     let streak = 0;
     const temp = new Date(today);
     for (let i = 0; i < 365; i++) {
@@ -1274,7 +1314,6 @@
       temp.setDate(temp.getDate() - 1);
     }
 
-    // current streak from today backwards
     const temp2 = new Date(today);
     while (true) {
       const key = formatDateKey(temp2);
@@ -1292,10 +1331,11 @@
     streakBestEl.textContent = `${bestStreak} day${bestStreak === 1 ? '' : 's'}`;
   }
 
-  // Charts & pace helpers
+  // Pace helpers
   function paceStringToSeconds(str) {
     if (!str) return null;
-    const parts = str.split(':');
+    const cleaned = String(str).split('–')[0].split('-')[0].trim();
+    const parts = cleaned.split(':');
     if (parts.length < 2) return null;
     const min = parseInt(parts[0], 10);
     const sec = parseInt(parts[1], 10);
@@ -1312,7 +1352,7 @@
 
   function updateCharts(runs) {
     const now = new Date();
-    const weekMap = new Map(); // mondayKey -> {dist, paceSecSum, distForPace}
+    const weekMap = new Map();
 
     for (let offset = 0; offset < 6 * 7 + 7; offset++) {
       const d = new Date(now);
@@ -1357,7 +1397,6 @@
       }
     });
 
-    // Distance chart
     if (weekDistanceChart) weekDistanceChart.destroy();
     if (labels.length > 0) {
       weekDistanceChart = new Chart(weekDistanceCanvas.getContext('2d'), {
@@ -1379,7 +1418,6 @@
       });
     }
 
-    // Pace chart
     if (weekPaceChart) weekPaceChart.destroy();
     if (labels.length > 0) {
       weekPaceChart = new Chart(weekPaceCanvas.getContext('2d'), {
@@ -1415,9 +1453,67 @@
         }
       });
     }
+
+    // RPE vs Pace scatter (last ~60 days)
+    const points = [];
+    const today = new Date();
+    for (let i = 0; i < 60; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = formatDateKey(d);
+      const run = runs[key];
+      if (!run || !run.actualDistance || !run.actualPace || !run.rpe) continue;
+      const paceSec = paceStringToSeconds(run.actualPace);
+      if (!paceSec) continue;
+      points.push({
+        x: paceSec,
+        y: run.rpe,
+        label: `${d.getDate()}/${d.getMonth()+1}`
+      });
+    }
+
+    if (rpePaceChart) rpePaceChart.destroy();
+    if (points.length > 0) {
+      rpePaceChart = new Chart(rpePaceCanvas.getContext('2d'), {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'RPE vs pace',
+            data: points
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const raw = ctx.raw;
+                  return `${raw.label}: ${secondsToPace(raw.x)} min/km, RPE ${raw.y}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display: true, text: 'Pace (min/km)' },
+              ticks: {
+                callback: (v) => secondsToPace(v) || ''
+              }
+            },
+            y: {
+              title: { display: true, text: 'RPE (1–10)' },
+              min: 1,
+              max: 10
+            }
+          }
+        }
+      });
+    }
   }
 
-  // AI-ish coach (EN / GR with toggle)
+  // Coach
   function updateCoach(runs) {
     const today = new Date();
     const last21 = [];
@@ -1433,6 +1529,8 @@
         key,
         dist: run.actualDistance,
         rpe: run.rpe ?? null,
+        sleep: run.sleep ?? null,
+        fatigue: run.fatigue ?? null,
         paceSec
       });
     }
@@ -1471,7 +1569,7 @@
       : 6 * 60;
     const easyPaceSec = medianPace + 20;
 
-    // Last 2 days
+    // Last 2 days RPE
     let last2Dist = 0;
     let last2Rpe = [];
     for (let i = 0; i < 2; i++) {
@@ -1488,6 +1586,22 @@
       ? last2Rpe.reduce((a,b)=>a+b,0)/last2Rpe.length
       : null;
 
+    // Last 3 days sleep & fatigue
+    let sleepVals = [];
+    let fatigueVals = [];
+    for (let i = 0; i < 3; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = formatDateKey(d);
+      const run = runs[key];
+      if (run) {
+        if (run.sleep) sleepVals.push(run.sleep);
+        if (run.fatigue) fatigueVals.push(run.fatigue);
+      }
+    }
+    const avgSleep3 = sleepVals.length ? sleepVals.reduce((a,b)=>a+b,0)/sleepVals.length : null;
+    const avgFatigue3 = fatigueVals.length ? fatigueVals.reduce((a,b)=>a+b,0)/fatigueVals.length : null;
+
     const easyPaceStr = secondsToPace(easyPaceSec) || "comfortable";
 
     let enMsg = "";
@@ -1499,6 +1613,16 @@
 
       grMsg += `Έχεις αυξήσει αρκετά το εβδομαδιαίο σου φορτίο (${last7Dist.toFixed(1)} km σε σχέση με ${prev7Dist.toFixed(1)} km). `;
       grMsg += "Προσπάθησε να μην ανεβάζεις τα χιλιόμετρα πάνω από ~10–20% την εβδομάδα. ";
+    }
+
+    if (avgSleep3 !== null && avgSleep3 <= 4) {
+      enMsg += "Sleep has been on the low side lately. Prioritize an easier day or an extra hour of sleep before pushing hard. ";
+      grMsg += "Ο ύπνος σου είναι λίγο χαμηλός τις τελευταίες ημέρες. Προτίμησε μια πιο χαλαρή μέρα ή μία ώρα παραπάνω ύπνο πριν πιέσεις. ";
+    }
+
+    if (avgFatigue3 !== null && avgFatigue3 >= 7) {
+      enMsg += "Your fatigue scores are high. A lighter day or full rest now can help you absorb the training better. ";
+      grMsg += "Η κούρασή σου είναι αυξημένη. Μια πιο ελαφριά μέρα ή πλήρης ξεκούραση τώρα θα σε βοηθήσουν να «χωνέψεις» την προπόνηση. ";
     }
 
     if (last2Dist > 0 && avgLast2Rpe && avgLast2Rpe >= 7) {
@@ -1522,11 +1646,82 @@
       : `Coach: ${enMsg}`;
   }
 
+  function updateSleepFatigueSummary(runs) {
+    const now = new Date();
+    const start = new Date(now);
+    start.setDate(now.getDate() - 6);
+
+    let sleepVals = [];
+    let fatigueVals = [];
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      const key = formatDateKey(d);
+      const run = runs[key];
+      if (!run) continue;
+      if (run.sleep) sleepVals.push(run.sleep);
+      if (run.fatigue) fatigueVals.push(run.fatigue);
+    }
+
+    if (!sleepVals.length && !fatigueVals.length) {
+      sleepFatigueSummaryEl.textContent = '';
+      return;
+    }
+
+    const avgSleep = sleepVals.length ? (sleepVals.reduce((a,b)=>a+b,0) / sleepVals.length) : null;
+    const avgFatigue = fatigueVals.length ? (fatigueVals.reduce((a,b)=>a+b,0) / fatigueVals.length) : null;
+
+    let text = 'Last 7 days ';
+    if (avgSleep !== null) text += `· sleep avg ${avgSleep.toFixed(1)}/10 `;
+    if (avgFatigue !== null) text += `· fatigue avg ${avgFatigue.toFixed(1)}/10`;
+
+    sleepFatigueSummaryEl.textContent = text;
+  }
+
+  function updateShoeSummary(runs) {
+    const shoeTotals = {};
+    Object.keys(runs).forEach(key => {
+      const r = runs[key];
+      if (!r || !r.shoe || !r.actualDistance) return;
+      const name = r.shoe.trim();
+      if (!name) return;
+      if (!shoeTotals[name]) shoeTotals[name] = 0;
+      shoeTotals[name] += r.actualDistance;
+    });
+
+    // update datalist
+    shoeOptionsEl.innerHTML = '';
+    Object.keys(shoeTotals).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      shoeOptionsEl.appendChild(opt);
+    });
+
+    if (Object.keys(shoeTotals).length === 0) {
+      shoeSummaryEl.textContent = 'No shoes tracked yet. Add a shoe name to your runs to track total km.';
+      return;
+    }
+
+    let html = 'Shoes km total:';
+    html += '<ul>';
+    Object.entries(shoeTotals).forEach(([name, km]) => {
+      let label = `${name}: ${km.toFixed(1)} km`;
+      if (km >= 800) label += ' ⚠ time to retire soon';
+      else if (km >= 600) label += ' ⚡ getting high';
+      html += `<li>${label}</li>`;
+    });
+    html += '</ul>';
+    shoeSummaryEl.innerHTML = html;
+  }
+
   function updateAnalytics(runs) {
     updateThisWeekStats(runs);
     updateStreaks(runs);
     updateCharts(runs);
     updateCoach(runs);
+    updateSleepFatigueSummary(runs);
+    updateShoeSummary(runs);
   }
 
   // Supabase sync
@@ -1560,7 +1755,6 @@
     }
   }
 
-
   async function loadFriendFromSupabase(friendSyncId) {
     friendMode = true;
     friendId = friendSyncId;
@@ -1586,7 +1780,7 @@
       if (shareCodeEl) {
         shareCodeEl.textContent = '';
       }
-      authStatus.textContent = 'Viewing friend calendar (read-only)';
+      authStatus.textContent = "Viewing friend calendar (read-only)";
       renderCalendar();
       syncStatus.textContent = 'Friend loaded';
     } catch (e) {
@@ -1706,7 +1900,7 @@
     friendRunsCache = {};
     updateAuthUI();
     syncStatus.textContent = '';
-    renderCalendar(); // empty calendar when logged out
+    renderCalendar();
   });
 
   // Friend view buttons
@@ -1810,7 +2004,7 @@
     doc.save(fileName);
   });
 
-  // TRAINING PLANS: start date -> race date, days per week, and mark planId
+  // TRAINING PLANS
   function applyTrainingPlan() {
     if (friendMode) {
       alert('You cannot apply a plan while viewing a friend. Switch back to your calendar.');
@@ -1868,15 +2062,11 @@
         dayDate.setDate(startDate.getDate() + week * 7 + dow);
         if (dayDate > raceDate) continue;
 
-        if (!activeDays.has(dow)) {
-          // this weekday is not part of chosen training days: leave as-is / rest
-          continue;
-        }
+        if (!activeDays.has(dow)) continue;
 
         const key = formatDateKey(dayDate);
         const { type, dist, pace, notes } = plan.generator(week, totalWeeks, dow);
 
-        // Only set if there's no existing run (don’t overwrite manual stuff)
         if (!runs[key]) {
           if (type === 'Rest' && (!dist || dist === 0)) {
             continue;
@@ -1888,6 +2078,9 @@
             actualDistance: null,
             actualPace: null,
             rpe: null,
+            shoe: null,
+            sleep: null,
+            fatigue: null,
             notes: notes || '',
             planId: planId
           };
@@ -1926,7 +2119,6 @@
 
   applyPlanBtn.addEventListener('click', applyTrainingPlan);
 
-  // CLEAR TRAINING PLAN (automatic: based on selected planId, no dates)
   async function clearTrainingPlan() {
     if (friendMode) {
       alert('You cannot clear a plan while viewing a friend. Switch back to your calendar.');
@@ -1946,7 +2138,6 @@
     const runs = getStorage();
     const datesToDelete = [];
 
-    // Remove only runs created by this plan that don't have an actualDistance yet
     Object.keys(runs).forEach(dateKey => {
       const r = runs[dateKey];
       if (r && r.planId === planId && (!r.actualDistance || r.actualDistance === 0)) {
@@ -1991,7 +2182,6 @@
 
   clearPlanBtn.addEventListener('click', clearTrainingPlan);
 
-  // FORCE CLEAR TRAINING PLAN (deletes ALL days with this planId, even logged runs)
   async function forceClearTrainingPlan() {
     if (friendMode) {
       alert('You cannot force clear while viewing a friend. Switch back to your calendar.');
