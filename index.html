@@ -524,35 +524,65 @@
       z-index: 15;
     }
 
-    @media (max-width: 700px) {
+    /* MOBILE LAYOUT POLISH */
+@media (max-width: 700px) {
+
+  /* a bit more breathing room around the whole page */
   main {
-    padding: 0.6rem;
+    padding: 0.9rem 0.9rem 1.4rem;
   }
 
+  /* cards: bigger + spaced apart */
+  .card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem 1.1rem 1.2rem;
+    margin-top: 0.8rem;
+  }
+
+  /* extra gap between consecutive cards */
+  .card + .card {
+    margin-top: 1rem;
+  }
+
+  /* vertical spacing between calendar + stats area */
+  .calendar-wrapper {
+    margin-bottom: 1.2rem;
+  }
+
+  /* if your stats section uses a grid, make it single-column */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  /* keep existing tweaks you already added */
   .calendar {
     gap: 2px;
   }
 
   .day {
-    min-height: 64px;
-    padding: 0.25rem;
+    min-height: 70px;
+    padding: 0.35rem;
   }
 
   .weekday {
     font-size: 0.7rem;
   }
 
-  /* Header: stop being sticky on mobile */
+  /* header not sticky on mobile */
   header {
     position: static;
     top: auto;
     box-shadow: none;
   }
 
-  /* Auth bar: stack nicely */
+  /* auth bar stacked full-width */
   .auth-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
   }
 
   .auth-bar input,
@@ -561,10 +591,11 @@
     width: 100%;
   }
 
-  /* Toolbar: each group full width, controls stacked */
+  /* toolbar stacked with space */
   .toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
 
   .toolbar-group {
@@ -572,14 +603,7 @@
     width: 100%;
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .toolbar-group label {
-    margin-top: 0.25rem;
-  }
-
-  .toolbar-group label:first-child {
-    margin-top: 0;
+    gap: 0.5rem;
   }
 
   .toolbar-group select,
@@ -588,11 +612,11 @@
     width: 100%;
   }
 
-  /* Floating Today button visible on mobile */
+  /* floating Today button */
   .fab-today {
     display: inline-flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.25rem;
   }
 }
 
