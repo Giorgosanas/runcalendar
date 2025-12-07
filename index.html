@@ -12,7 +12,6 @@
 
   <style>
     :root {
-      /* Base dark theme defaults */
       --bg: #0b1220;
       --card: #020617;
       --border: #1f2937;
@@ -531,6 +530,7 @@
     <button id="signupBtn">Sign up</button>
     <button id="logoutBtn" style="display:none;" class="secondary">Log out</button>
     <span id="authStatus" class="sync-status">Not logged in</span>
+    <span id="shareCode" class="sync-status"></span>
     <span id="syncStatus" class="sync-status"></span>
   </div>
 </header>
@@ -560,6 +560,9 @@
       </select>
       <button id="applyPlanBtn">Apply</button>
       <button id="clearPlanBtn" style="background:var(--danger);color:white;">Clear plan</button>
+      <button id="forceClearPlanBtn" style="background:transparent;border:1px solid var(--danger);color:var(--danger);">
+        Force clear
+      </button>
     </div>
 
     <div class="toolbar-group">
@@ -571,6 +574,13 @@
         <option value="forest">Forest</option>
         <option value="neon">Neon</option>
       </select>
+    </div>
+
+    <div class="toolbar-group">
+      <label for="friendCodeInput">Friend code</label>
+      <input id="friendCodeInput" type="text" placeholder="paste code" />
+      <button id="viewFriendBtn">View</button>
+      <button id="backToMeBtn">Me</button>
     </div>
   </div>
 
@@ -681,8 +691,8 @@
 
 <script>
   // 🔧 Your Supabase config
-  const SUPABASE_URL = "YOUR_SUPABASE_URL";
-  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+  const SUPABASE_URL = "https://bdhqktzwchswzwlmrpmd.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkaHFrdHp3Y2hzd3p3bG1ycG1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMzY2NTUsImV4cCI6MjA4MDYxMjY1NX0.WAElPc6oei5haF1qqgqaEKmKrb82g4GYTQ6m-uVXdPk";
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const { jsPDF } = window.jspdf;
@@ -812,6 +822,7 @@
   const signupBtn = document.getElementById('signupBtn');
   const logoutBtn = document.getElementById('logoutBtn');
   const authStatus = document.getElementById('authStatus');
+  const shareCodeEl = document.getElementById('shareCode');
   const syncStatus = document.getElementById('syncStatus');
 
   const pdfBtn = document.getElementById('pdfBtn');
@@ -826,7 +837,12 @@
   const planDaysPerWeekSelect = document.getElementById('planDaysPerWeek');
   const applyPlanBtn = document.getElementById('applyPlanBtn');
   const clearPlanBtn = document.getElementById('clearPlanBtn');
+  const forceClearPlanBtn = document.getElementById('forceClearPlanBtn');
   const colorThemeSelect = document.getElementById('colorThemeSelect');
+
+  const friendCodeInput = document.getElementById('friendCodeInput');
+  const viewFriendBtn = document.getElementById('viewFriendBtn');
+  const backToMeBtn = document.getElementById('backToMeBtn');
 
   const coachLangSelect = document.getElementById('coachLangSelect');
 
@@ -837,6 +853,11 @@
   currentMonth.setDate(1);
   let selectedDateKey = null;
   let currentUser = null;
+
+  // friend view state
+  let friendMode = false;
+  let friendId = null;
+  let friendRunsCache = {};
 
   let coachLang = localStorage.getItem('runCalendarCoachLang') || 'en';
   coachLangSelect.value = coachLang;
@@ -887,6 +908,10 @@
 
   // STORAGE
   function getStorage() {
+    // If we are in friend view, use in-memory friend cache
+    if (friendMode) {
+      return friendRunsCache || {};
+    }
     if (!currentUser) return {};
     const key = 'runCalendarData_' + currentUser.id;
     const raw = localStorage.getItem(key);
@@ -894,6 +919,11 @@
   }
 
   function setStorage(data) {
+    // In friend mode we don't write to localStorage, just update in-memory cache
+    if (friendMode) {
+      friendRunsCache = data;
+      return;
+    }
     if (!currentUser) return;
     const key = 'runCalendarData_' + currentUser.id;
     localStorage.setItem(key, JSON.stringify(data));
@@ -974,7 +1004,13 @@
         }
       }
 
-      cell.addEventListener('click', () => openModal(key));
+      cell.addEventListener('click', () => {
+        if (friendMode) {
+          alert('You are viewing a friend\'s calendar (read-only).');
+          return;
+        }
+        openModal(key);
+      });
       calendarEl.appendChild(cell);
     }
 
@@ -1007,6 +1043,10 @@
 
   // SAVE / DELETE
   saveBtn.addEventListener('click', async () => {
+    if (friendMode) {
+      alert('Friend view is read-only. Switch back to your calendar to edit runs.');
+      return;
+    }
     if (!selectedDateKey) return;
 
     const dateKey = selectedDateKey;
@@ -1036,6 +1076,10 @@
   });
 
   deleteBtn.addEventListener('click', async () => {
+    if (friendMode) {
+      alert('Friend view is read-only. Switch back to your calendar to edit runs.');
+      return;
+    }
     if (!selectedDateKey) return;
     const dateKey = selectedDateKey;
     const runs = getStorage();
@@ -1402,6 +1446,42 @@
     }
   }
 
+
+  async function loadFriendFromSupabase(friendSyncId) {
+    friendMode = true;
+    friendId = friendSyncId;
+    syncStatus.textContent = 'Loading friend...';
+    try {
+      const { data, error } = await supabase
+        .from('runs')
+        .select('date, data')
+        .eq('sync_id', friendSyncId);
+
+      if (error) {
+        console.error('Supabase friend load error:', error);
+        syncStatus.textContent = 'Error loading friend';
+        alert('Could not load friend data: ' + (error.message || JSON.stringify(error)));
+        return;
+      }
+
+      friendRunsCache = {};
+      data.forEach(row => {
+        friendRunsCache[row.date] = row.data;
+      });
+
+      if (shareCodeEl) {
+        shareCodeEl.textContent = '';
+      }
+      authStatus.textContent = 'Viewing friend calendar (read-only)';
+      renderCalendar();
+      syncStatus.textContent = 'Friend loaded';
+    } catch (e) {
+      console.error('Unexpected friend load error:', e);
+      syncStatus.textContent = 'Error';
+      alert('Unexpected friend load error: ' + e.message);
+    }
+  }
+
   async function saveRunToSupabase(userId, dateKey, runObj) {
     syncStatus.textContent = 'Syncing...';
     try {
@@ -1446,9 +1526,15 @@
   function updateAuthUI() {
     if (currentUser) {
       authStatus.textContent = `Logged in as ${currentUser.email}`;
+      if (shareCodeEl) {
+        shareCodeEl.textContent = `Share code: ${currentUser.id}`;
+      }
       logoutBtn.style.display = 'inline-block';
     } else {
       authStatus.textContent = 'Not logged in';
+      if (shareCodeEl) {
+        shareCodeEl.textContent = '';
+      }
       logoutBtn.style.display = 'none';
     }
   }
@@ -1501,9 +1587,35 @@
   logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
     currentUser = null;
+    friendMode = false;
+    friendId = null;
+    friendRunsCache = {};
     updateAuthUI();
     syncStatus.textContent = '';
     renderCalendar(); // empty calendar when logged out
+  });
+
+  // Friend view buttons
+  viewFriendBtn.addEventListener('click', async () => {
+    const code = friendCodeInput.value.trim();
+    if (!code) {
+      alert('Paste a friend code first (they can find it under "Share code" when logged in).');
+      return;
+    }
+    await loadFriendFromSupabase(code);
+  });
+
+  backToMeBtn.addEventListener('click', async () => {
+    friendMode = false;
+    friendId = null;
+    friendRunsCache = {};
+    if (currentUser) {
+      updateAuthUI();
+      await loadFromSupabase(currentUser.id);
+    } else {
+      updateAuthUI();
+      renderCalendar();
+    }
   });
 
   // PDF export
@@ -1586,6 +1698,10 @@
 
   // TRAINING PLANS: start date -> race date, days per week, and mark planId
   function applyTrainingPlan() {
+    if (friendMode) {
+      alert('You cannot apply a plan while viewing a friend. Switch back to your calendar.');
+      return;
+    }
     if (!currentUser) {
       alert('Log in to apply a training plan.');
       return;
@@ -1696,50 +1812,40 @@
 
   applyPlanBtn.addEventListener('click', applyTrainingPlan);
 
-  // CLEAR TRAINING PLAN (only plan-generated entries in range; keeps logged runs)
+  // CLEAR TRAINING PLAN (automatic: based on selected planId, no dates)
   async function clearTrainingPlan() {
+    if (friendMode) {
+      alert('You cannot clear a plan while viewing a friend. Switch back to your calendar.');
+      return;
+    }
     if (!currentUser) {
       alert('Log in to clear a plan.');
       return;
     }
+
     const planId = planSelect.value;
     if (planId === 'none') {
-      alert('Select the plan you want to clear.');
-      return;
-    }
-    const start = planStartDateInput.value;
-    const race = planRaceDateInput.value;
-    if (!start || !race) {
-      alert('Choose the same start & race dates of the plan you want to clear.');
-      return;
-    }
-
-    const [ys, ms, ds] = start.split('-').map(Number);
-    const [yr, mr, dr] = race.split('-').map(Number);
-    if (!ys || !ms || !ds || !yr || !mr || !dr) {
-      alert('Invalid dates.');
-      return;
-    }
-
-    const startDate = new Date(ys, ms - 1, ds);
-    const raceDate = new Date(yr, mr - 1, dr);
-    if (raceDate < startDate) {
-      alert('Race date must be after start date.');
+      alert('Select the plan you want to clear from the dropdown.');
       return;
     }
 
     const runs = getStorage();
     const datesToDelete = [];
 
-    let d = new Date(startDate);
-    while (d <= raceDate) {
-      const key = formatDateKey(d);
-      const r = runs[key];
-      if (r && r.planId === planId && !r.actualDistance) {
-        delete runs[key];
-        datesToDelete.push(key);
+    // Remove only runs created by this plan that don't have an actualDistance yet
+    Object.keys(runs).forEach(dateKey => {
+      const r = runs[dateKey];
+      if (r && r.planId === planId && (!r.actualDistance || r.actualDistance === 0)) {
+        delete runs[dateKey];
+        datesToDelete.push(dateKey);
       }
-      d.setDate(d.getDate() + 1);
+    });
+
+    if (datesToDelete.length === 0) {
+      setStorage(runs);
+      renderCalendar();
+      alert('No plan days found to clear (or all have logged runs).');
+      return;
     }
 
     setStorage(runs);
@@ -1748,23 +1854,100 @@
     if (currentUser && datesToDelete.length > 0) {
       syncStatus.textContent = 'Clearing plan...';
       try {
-        // delete each date on supabase
-        for (const dateKey of datesToDelete) {
-          await supabase
-            .from('runs')
-            .delete()
-            .eq('sync_id', currentUser.id)
-            .eq('date', dateKey);
+        const { error } = await supabase
+          .from('runs')
+          .delete()
+          .eq('sync_id', currentUser.id)
+          .in('date', datesToDelete);
+
+        if (error) {
+          console.error(error);
+          syncStatus.textContent = 'Sync error';
+          alert('Error clearing plan from server.');
+        } else {
+          syncStatus.textContent = 'Synced';
         }
-        syncStatus.textContent = 'Synced';
       } catch (e) {
         console.error(e);
         syncStatus.textContent = 'Sync error';
+        alert('Error clearing plan from server.');
       }
     }
   }
 
   clearPlanBtn.addEventListener('click', clearTrainingPlan);
+
+  // FORCE CLEAR TRAINING PLAN (deletes ALL days with this planId, even logged runs)
+  async function forceClearTrainingPlan() {
+    if (friendMode) {
+      alert('You cannot force clear while viewing a friend. Switch back to your calendar.');
+      return;
+    }
+    if (!currentUser) {
+      alert('Log in to force clear a plan.');
+      return;
+    }
+
+    const planId = planSelect.value;
+    if (planId === 'none') {
+      alert('Select the plan you want to force clear from the dropdown.');
+      return;
+    }
+
+    const confirmText =
+      '⚠ WARNING ⚠\n\n' +
+      'This will delete ALL days created with this plan (including days where you have logged runs).\n' +
+      'This cannot be undone.\n\n' +
+      'Do you really want to continue?';
+
+    if (!window.confirm(confirmText)) {
+      return;
+    }
+
+    const runs = getStorage();
+    const datesToDelete = [];
+
+    Object.keys(runs).forEach(dateKey => {
+      const r = runs[dateKey];
+      if (r && r.planId === planId) {
+        delete runs[dateKey];
+        datesToDelete.push(dateKey);
+      }
+    });
+
+    if (datesToDelete.length === 0) {
+      setStorage(runs);
+      renderCalendar();
+      alert('No days found with this planId.');
+      return;
+    }
+
+    setStorage(runs);
+    renderCalendar();
+
+    syncStatus.textContent = 'Force clearing plan...';
+    try {
+      const { error } = await supabase
+        .from('runs')
+        .delete()
+        .eq('sync_id', currentUser.id)
+        .in('date', datesToDelete);
+
+      if (error) {
+        console.error(error);
+        syncStatus.textContent = 'Sync error';
+        alert('Error force clearing plan from server.');
+      } else {
+        syncStatus.textContent = 'Synced';
+      }
+    } catch (e) {
+      console.error(e);
+      syncStatus.textContent = 'Sync error';
+      alert('Error force clearing plan from server.');
+    }
+  }
+
+  forceClearPlanBtn.addEventListener('click', forceClearTrainingPlan);
 
   // Coach language toggle
   coachLangSelect.addEventListener('change', () => {
