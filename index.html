@@ -769,30 +769,34 @@
           </select>
         </div>
       </div>
+            <!-- 1. Weekly distance -->
       <div class="chart-container">
-        <canvas id="weekDistanceCanvas" height="120"></canvas>
-            <div class="chart-container">
         <canvas id="weekDistanceCanvas" height="120"></canvas>
       </div>
 
+      <!-- 2. Weekly average pace -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="weekPaceCanvas" height="120"></canvas>
       </div>
 
+      <!-- 3. RPE vs pace scatter -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="rpePaceCanvas" height="120"></canvas>
       </div>
 
+      <!-- 4. Run type mix -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="typeMixCanvas" height="120"></canvas>
       </div>
 
+      <!-- 5. RPE histogram -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="rpeHistogramCanvas" height="120"></canvas>
       </div>
 
       <p id="coachAdvice"></p>
       <div id="runningAnalysis" style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-muted);"></div>
+
 
     </div>
   </div>
@@ -1481,281 +1485,303 @@
 
 
     function updateCharts(runs) {
-    const now = new Date();
-    const weekMap = new Map();
+  const now = new Date();
+  const weekMap = new Map();
 
-    // ───────── Weekly distance & pace (existing logic) ─────────
-    for (let offset = 0; offset < 6 * 7 + 7; offset++) {
-      const d = new Date(now);
-      d.setDate(now.getDate() - offset);
-      const key = formatDateKey(d);
-      const run = runs[key];
-      if (!run || !run.actualDistance) continue;
+  // ---------- Weekly distance & pace ----------
+  for (let offset = 0; offset < 6 * 7 + 7; offset++) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - offset);
+    const key = formatDateKey(d);
+    const run = runs[key];
+    if (!run || !run.actualDistance) continue;
 
-      const dow = (d.getDay() + 6) % 7;
-      const monday = new Date(d);
-      monday.setDate(d.getDate() - dow);
-      const mondayKey = formatDateKey(monday);
+    const dow = (d.getDay() + 6) % 7;
+    const monday = new Date(d);
+    monday.setDate(d.getDate() - dow);
+    const mondayKey = formatDateKey(monday);
 
-      if (!weekMap.has(mondayKey)) {
-        weekMap.set(mondayKey, { dist: 0, paceSecSum: 0, distForPace: 0 });
-      }
-      const bucket = weekMap.get(mondayKey);
-      bucket.dist += run.actualDistance;
-
-      const paceSec = paceStringToSeconds(run.actualPace);
-      if (paceSec) {
-        bucket.paceSecSum += paceSec * run.actualDistance;
-        bucket.distForPace += run.actualDistance;
-      }
+    if (!weekMap.has(mondayKey)) {
+      weekMap.set(mondayKey, { dist: 0, paceSecSum: 0, distForPace: 0 });
     }
+    const bucket = weekMap.get(mondayKey);
+    bucket.dist += run.actualDistance;
 
-    const weekKeys = Array.from(weekMap.keys()).sort();
-    const labels = [];
-    const distData = [];
-    const paceData = [];
+    const paceSec = paceStringToSeconds(run.actualPace);
+    if (paceSec) {
+      bucket.paceSecSum += paceSec * run.actualDistance;
+      bucket.distForPace += run.actualDistance;
+    }
+  }
 
-    weekKeys.forEach(k => {
-      const monday = new Date(k);
-      labels.push(`Week of ${monday.getDate()}/${monday.getMonth()+1}`);
-      const b = weekMap.get(k);
-      distData.push(b.dist.toFixed(1));
-      if (b.distForPace > 0) {
-        const avgSec = b.paceSecSum / b.distForPace;
-        paceData.push(avgSec);
-      } else {
-        paceData.push(null);
+  const weekKeys = Array.from(weekMap.keys()).sort();
+  const labels = [];
+  const distData = [];
+  const paceData = [];
+
+  weekKeys.forEach(k => {
+    const monday = new Date(k);
+    labels.push(`Week of ${monday.getDate()}/${monday.getMonth() + 1}`);
+    const b = weekMap.get(k);
+    distData.push(b.dist.toFixed(1));
+    if (b.distForPace > 0) {
+      const avgSec = b.paceSecSum / b.distForPace;
+      paceData.push(avgSec);
+    } else {
+      paceData.push(null);
+    }
+  });
+
+  // weekly distance bar
+  if (weekDistanceChart) weekDistanceChart.destroy();
+  if (labels.length > 0 && weekDistanceCanvas) {
+    weekDistanceCanvas.parentElement.style.display = "block";
+    weekDistanceChart = new Chart(weekDistanceCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Weekly distance (km)',
+          data: distData
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  } else if (weekDistanceCanvas) {
+    weekDistanceCanvas.parentElement.style.display = "none";
+  }
+
+  // weekly pace line
+  if (weekPaceChart) weekPaceChart.destroy();
+  if (labels.length > 0 && weekPaceCanvas) {
+    weekPaceCanvas.parentElement.style.display = "block";
+    weekPaceChart = new Chart(weekPaceCanvas.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Average pace (min/km)',
+          data: paceData,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const val = ctx.parsed.y;
+                return val ? `Avg pace: ${secondsToPace(val)} min/km` : '';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            ticks: {
+              callback: (v) => secondsToPace(v) || ''
+            }
+          }
+        }
+      }
+    });
+  } else if (weekPaceCanvas) {
+    weekPaceCanvas.parentElement.style.display = "none";
+  }
+
+  // ---------- RPE vs pace scatter ----------
+  const points = [];
+  const today = new Date();
+  for (let i = 0; i < 60; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const key = formatDateKey(d);
+    const run = runs[key];
+    if (!run || !run.actualDistance || !run.actualPace || !run.rpe) continue;
+    const paceSec = paceStringToSeconds(run.actualPace);
+    if (!paceSec) continue;
+    points.push({
+      x: paceSec,
+      y: run.rpe,
+      label: `${d.getDate()}/${d.getMonth() + 1}`
+    });
+  }
+
+  if (rpePaceChart) rpePaceChart.destroy();
+  if (points.length > 0 && rpePaceCanvas) {
+    rpePaceCanvas.parentElement.style.display = "block";
+    rpePaceChart = new Chart(rpePaceCanvas.getContext('2d'), {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'RPE vs pace',
+          data: points
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const raw = ctx.raw;
+                return `${raw.label}: ${secondsToPace(raw.x)} min/km, RPE ${raw.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: 'Pace (min/km)' },
+            ticks: {
+              callback: (v) => secondsToPace(v) || ''
+            }
+          },
+          y: {
+            title: { display: true, text: 'RPE (1–10)' },
+            min: 1,
+            max: 10
+          }
+        }
+      }
+    });
+  } else if (rpePaceCanvas) {
+    // HIDE this container if no RPE data → fixes your big gap
+    rpePaceCanvas.parentElement.style.display = "none";
+  }
+
+  // ---------- Run type mix (last 60 days) ----------
+  if (typeof typeMixCanvas !== "undefined") {
+    if (typeMixChart) typeMixChart.destroy();
+
+    const typeMixContainer = typeMixCanvas.parentElement;
+    const typeCounts = {
+      Rest: 0,
+      Easy: 0,
+      Tempo: 0,
+      Intervals: 0,
+      Long: 0
+    };
+
+    Object.keys(runs).forEach(key => {
+      const r = runs[key];
+      if (!r || !r.actualDistance) return;
+      const d = new Date(key);
+      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+      if (diffDays < 0 || diffDays > 60) return;
+
+      const t = r.type || 'Easy';
+      if (typeCounts.hasOwnProperty(t)) {
+        typeCounts[t] += 1;
       }
     });
 
-    if (weekDistanceChart) weekDistanceChart.destroy();
-    if (labels.length > 0 && weekDistanceCanvas) {
-      weekDistanceChart = new Chart(weekDistanceCanvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Weekly distance (km)',
-            data: distData
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
-      });
-    }
+    const labelsType = [];
+    const dataType = [];
+    Object.entries(typeCounts).forEach(([type, count]) => {
+      if (count > 0) {
+        labelsType.push(type);
+        dataType.push(count);
+      }
+    });
 
-    if (weekPaceChart) weekPaceChart.destroy();
-    if (labels.length > 0 && weekPaceCanvas) {
-      weekPaceChart = new Chart(weekPaceCanvas.getContext('2d'), {
-        type: 'line',
+    if (labelsType.length > 0) {
+      typeMixContainer.style.display = "block";
+      typeMixChart = new Chart(typeMixCanvas.getContext('2d'), {
+        type: 'doughnut',
         data: {
-          labels,
+          labels: labelsType,
           datasets: [{
-            label: 'Average pace (min/km)',
-            data: paceData,
-            tension: 0.3
+            data: dataType
           }]
         },
         options: {
           responsive: true,
           plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => {
-                  const val = ctx.parsed.y;
-                  return val ? `Avg pace: ${secondsToPace(val)} min/km` : '';
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              ticks: {
-                callback: (v) => secondsToPace(v) || ''
-              }
+            legend: { display: true, position: 'bottom' },
+            title: {
+              display: true,
+              text: 'Run type mix (last 60 days)'
             }
           }
         }
       });
+    } else {
+      typeMixContainer.style.display = "none";
+    }
+  }
+
+  // ---------- RPE histogram (1–10, last 60 days) ----------
+  if (typeof rpeHistogramCanvas !== "undefined") {
+    if (rpeHistogramChart) rpeHistogramChart.destroy();
+
+    const histContainer = rpeHistogramCanvas.parentElement;
+    const rpeCounts = new Array(10).fill(0);
+
+    Object.keys(runs).forEach(key => {
+      const r = runs[key];
+      if (!r || !r.actualDistance || r.rpe == null) return;
+      const d = new Date(key);
+      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+      if (diffDays < 0 || diffDays > 60) return;
+
+      const idx = Math.round(r.rpe) - 1;
+      if (idx >= 0 && idx < 10) {
+        rpeCounts[idx] += 1;
+      }
+    });
+
+    const histLabels = [];
+    const histData = [];
+    for (let i = 0; i < 10; i++) {
+      histLabels.push(String(i + 1));
+      histData.push(rpeCounts[i]);
     }
 
-    // ───────── RPE vs Pace scatter (existing) ─────────
-    const points = [];
-    const today = new Date();
-    for (let i = 0; i < 60; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const key = formatDateKey(d);
-      const run = runs[key];
-      if (!run || !run.actualDistance || !run.actualPace || !run.rpe) continue;
-      const paceSec = paceStringToSeconds(run.actualPace);
-      if (!paceSec) continue;
-      points.push({
-        x: paceSec,
-        y: run.rpe,
-        label: `${d.getDate()}/${d.getMonth()+1}`
-      });
-    }
-
-    if (rpePaceChart) rpePaceChart.destroy();
-    if (points.length > 0 && rpePaceCanvas) {
-      rpePaceChart = new Chart(rpePaceCanvas.getContext('2d'), {
-        type: 'scatter',
+    const hasData = histData.some(v => v > 0);
+    if (hasData) {
+      histContainer.style.display = "block";
+      rpeHistogramChart = new Chart(rpeHistogramCanvas.getContext('2d'), {
+        type: 'bar',
         data: {
+          labels: histLabels,
           datasets: [{
-            label: 'RPE vs pace',
-            data: points
+            label: 'RPE count (last 60 days)',
+            data: histData
           }]
         },
         options: {
           responsive: true,
           plugins: {
             legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => {
-                  const raw = ctx.raw;
-                  return `${raw.label}: ${secondsToPace(raw.x)} min/km, RPE ${raw.y}`;
-                }
-              }
+            title: {
+              display: true,
+              text: 'RPE distribution (1–10)'
             }
           },
           scales: {
             x: {
-              title: { display: true, text: 'Pace (min/km)' },
-              ticks: {
-                callback: (v) => secondsToPace(v) || ''
-              }
+              title: { display: true, text: 'RPE' }
             },
             y: {
-              title: { display: true, text: 'RPE (1–10)' },
-              min: 1,
-              max: 10
+              beginAtZero: true,
+              title: { display: true, text: 'Number of runs' }
             }
           }
         }
       });
-    }
-
-    // ───────── NEW: Run type mix (last 60 days) ─────────
-    if (typeMixChart) typeMixChart.destroy();
-    if (typeMixCanvas) {
-      const typeCounts = {
-        Rest: 0,
-        Easy: 0,
-        Tempo: 0,
-        Intervals: 0,
-        Long: 0
-      };
-
-      Object.keys(runs).forEach(key => {
-        const r = runs[key];
-        if (!r || !r.actualDistance) return;
-        const d = new Date(key);
-        const diffDays = (today - d) / (1000 * 60 * 60 * 24);
-        if (diffDays < 0 || diffDays > 60) return;
-
-        const t = r.type || 'Easy';
-        if (typeCounts.hasOwnProperty(t)) {
-          typeCounts[t] += 1;
-        }
-      });
-
-      const labelsType = [];
-      const dataType = [];
-      Object.entries(typeCounts).forEach(([type, count]) => {
-        if (count > 0) {
-          labelsType.push(type);
-          dataType.push(count);
-        }
-      });
-
-      if (labelsType.length > 0) {
-        typeMixChart = new Chart(typeMixCanvas.getContext('2d'), {
-          type: 'doughnut',
-          data: {
-            labels: labelsType,
-            datasets: [{
-              data: dataType
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { display: true, position: 'bottom' },
-              title: {
-                display: true,
-                text: 'Run type mix (last 60 days)'
-              }
-            }
-          }
-        });
-      }
-    }
-
-    // ───────── NEW: RPE histogram (1–10, last 60 days) ─────────
-    if (rpeHistogramChart) rpeHistogramChart.destroy();
-    if (rpeHistogramCanvas) {
-      const rpeCounts = new Array(10).fill(0);
-
-      Object.keys(runs).forEach(key => {
-        const r = runs[key];
-        if (!r || !r.actualDistance || r.rpe == null) return;
-        const d = new Date(key);
-        const diffDays = (today - d) / (1000 * 60 * 60 * 24);
-        if (diffDays < 0 || diffDays > 60) return;
-
-        const idx = Math.round(r.rpe) - 1;
-        if (idx >= 0 && idx < 10) {
-          rpeCounts[idx] += 1;
-        }
-      });
-
-      const histLabels = [];
-      const histData = [];
-      for (let i = 0; i < 10; i++) {
-        histLabels.push(String(i + 1));
-        histData.push(rpeCounts[i]);
-      }
-
-      const hasData = histData.some(v => v > 0);
-      if (hasData) {
-        rpeHistogramChart = new Chart(rpeHistogramCanvas.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: histLabels,
-            datasets: [{
-              label: 'RPE count (last 60 days)',
-              data: histData
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { display: false },
-              title: {
-                display: true,
-                text: 'RPE distribution (1–10)'
-              }
-            },
-            scales: {
-              x: {
-                title: { display: true, text: 'RPE' }
-              },
-              y: {
-                beginAtZero: true,
-                title: { display: true, text: 'Number of runs' }
-              }
-            }
-          }
-        });
-      }
+    } else {
+      histContainer.style.display = "none";
     }
   }
+}
 
   // Coach – gives feedback similar to our chat
   function updateCoach(runs) {
@@ -2774,5 +2800,4 @@
 </script>
 </body>
 </html>
-
 
