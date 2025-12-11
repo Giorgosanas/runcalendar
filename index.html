@@ -24,7 +24,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
-  <style>
+   <style>
     :root {
       --bg: #0b1220;
       --card: #020617;
@@ -539,159 +539,114 @@
     }
 
     /* MOBILE LAYOUT POLISH */
-@media (max-width: 700px) {
-
-  /* a bit more breathing room around the whole page */
-  main {
-    padding: 0.9rem 0.9rem 1.4rem;
-  }
-
-  /* cards: bigger + spaced apart */
-  .card {
-    width: 100%;
-    max-width: 100%;
-    padding: 1rem 1.1rem 1.2rem;
-    margin-top: 0.8rem;
-  }
-
-  /* extra gap between consecutive cards */
-  .card + .card {
-    margin-top: 1rem;
-  }
-
-  /* vertical spacing between calendar + stats area */
-  .calendar-wrapper {
-    margin-bottom: 1.2rem;
-  }
-
-  /* if your stats section uses a grid, make it single-column */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1rem;
-  }
-
-  /* keep existing tweaks you already added */
-  .calendar {
-    gap: 2px;
-  }
-
-  .day {
-    min-height: 70px;
-    padding: 0.35rem;
-  }
-
-  .weekday {
-    font-size: 0.7rem;
-  }
-
-  /* header not sticky on mobile */
-  header {
-    position: static;
-    top: auto;
-    box-shadow: none;
-  }
-
-  /* auth bar stacked full-width */
-  .auth-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .auth-bar input,
-  .auth-bar button,
-  .auth-bar .sync-status {
-    width: 100%;
-  }
-
-  /* toolbar stacked with space */
-  .toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-
-  .toolbar-group {
-    border-radius: 12px;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .toolbar-group select,
-  .toolbar-group input,
-  .toolbar-group button {
-    width: 100%;
-  }
-
-  /* floating Today button */
-  .fab-today {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-}
-
-	    /* your existing CSS here ... */
-
-    /* ---- PASTE THE MOBILE FIX BELOW THIS LINE ---- */
-
     @media (max-width: 700px) {
-        /* center cards */
-        .card {
-            margin-left: auto;
-            margin-right: auto;
-            width: 100%;
-            max-width: 100%;
-        }
+      /* more breathing room around the whole page */
+      main {
+        padding: 0.9rem 0.9rem 1.4rem;
+      }
 
-        /* plan box full width */
-        .toolbar {
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-        }
+      /* calendar + stats stacked vertically and full width */
+      .calendar-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 1rem 1.1rem 1.2rem;
+        margin-top: 0.8rem;
+      }
 
-        .toolbar-group {
-            width: 100%;
-        }
+      .stats {
+        width: 100%;
+        max-width: 100%;
+        padding: 1rem 1.1rem 1.2rem;
+        margin-top: 0.8rem;
+      }
 
-        /* calendar wrapper full width */
-        .calendar-wrapper {
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            overflow: hidden;
-        }
+      /* extra gap between the two stats cards */
+      #analyticsBox {
+        margin-top: 1rem;
+      }
 
-        /* calendar grid fits inside the box */
-        .calendar {
-            width: 100%;
-            max-width: 100%;
-            grid-template-columns: repeat(7, 1fr);
-        }
+      /* stats grid becomes single column */
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
 
-        /* prevent day boxes from overflowing */
-        .day {
-            min-width: 0;
-            width: 100%;
-            padding: 0.4rem;
-            box-sizing: border-box;
-        }
+      /* calendar compact on mobile */
+      .calendar {
+        gap: 2px;
+        width: 100%;
+        max-width: 100%;
+        grid-template-columns: repeat(7, 1fr);
+      }
 
-        /* stats section full width */
-        .stats-grid {
-            grid-template-columns: 1fr;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            gap: 1.2rem;
-        }
+      .day {
+        min-height: 70px;
+        padding: 0.35rem;
+        min-width: 0;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .weekday {
+        font-size: 0.7rem;
+      }
+
+      /* header not sticky on mobile */
+      header {
+        position: static;
+        top: auto;
+        box-shadow: none;
+      }
+
+      /* auth bar stacked full-width */
+      .auth-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+
+      .auth-bar input,
+      .auth-bar button,
+      .auth-bar .sync-status {
+        width: 100%;
+      }
+
+      /* toolbar stacked with space */
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .toolbar-group {
+        border-radius: 12px;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+
+      .toolbar-group select,
+      .toolbar-group input,
+      .toolbar-group button {
+        width: 100%;
+      }
+
+      /* floating Today button visible on mobile */
+      .fab-today {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
     }
+  </style>
 
-</style>
 
 
   </style>
@@ -816,14 +771,29 @@
       </div>
       <div class="chart-container">
         <canvas id="weekDistanceCanvas" height="120"></canvas>
+            <div class="chart-container">
+        <canvas id="weekDistanceCanvas" height="120"></canvas>
       </div>
+
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="weekPaceCanvas" height="120"></canvas>
       </div>
+
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="rpePaceCanvas" height="120"></canvas>
       </div>
+
+      <div class="chart-container" style="margin-top:0.45rem;">
+        <canvas id="typeMixCanvas" height="120"></canvas>
+      </div>
+
+      <div class="chart-container" style="margin-top:0.45rem;">
+        <canvas id="rpeHistogramCanvas" height="120"></canvas>
+      </div>
+
       <p id="coachAdvice"></p>
+      <div id="runningAnalysis" style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-muted);"></div>
+
     </div>
   </div>
 </main>
@@ -1079,12 +1049,16 @@
   const shareCodeEl = document.getElementById('shareCode');
   const syncStatus = document.getElementById('syncStatus');
 
-  const pdfBtn = document.getElementById('pdfBtn');
+    const pdfBtn = document.getElementById('pdfBtn');
   const coachAdviceEl = document.getElementById('coachAdvice');
+  const runningAnalysisEl = document.getElementById('runningAnalysis');
 
   const weekDistanceCanvas = document.getElementById('weekDistanceCanvas');
   const weekPaceCanvas = document.getElementById('weekPaceCanvas');
   const rpePaceCanvas = document.getElementById('rpePaceCanvas');
+  const typeMixCanvas = document.getElementById('typeMixCanvas');
+  const rpeHistogramCanvas = document.getElementById('rpeHistogramCanvas');
+
 
   const planSelect = document.getElementById('planSelect');
   const planStartDateInput = document.getElementById('planStartDate');
@@ -1105,6 +1079,9 @@
   let weekDistanceChart = null;
   let weekPaceChart = null;
   let rpePaceChart = null;
+  let typeMixChart = null;
+  let rpeHistogramChart = null;
+
 
   let currentMonth = new Date();
   currentMonth.setDate(1);
@@ -1494,10 +1471,20 @@
     return `${m}:${String(s).padStart(2,'0')}`;
   }
 
-  function updateCharts(runs) {
+    function medianValue(arr) {
+    if (!arr || !arr.length) return null;
+    const sorted = [...arr].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    if (sorted.length % 2 === 1) return sorted[mid];
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+
+
+    function updateCharts(runs) {
     const now = new Date();
     const weekMap = new Map();
 
+    // ───────── Weekly distance & pace (existing logic) ─────────
     for (let offset = 0; offset < 6 * 7 + 7; offset++) {
       const d = new Date(now);
       d.setDate(now.getDate() - offset);
@@ -1542,7 +1529,7 @@
     });
 
     if (weekDistanceChart) weekDistanceChart.destroy();
-    if (labels.length > 0) {
+    if (labels.length > 0 && weekDistanceCanvas) {
       weekDistanceChart = new Chart(weekDistanceCanvas.getContext('2d'), {
         type: 'bar',
         data: {
@@ -1555,15 +1542,13 @@
         options: {
           responsive: true,
           plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true }
-          }
+          scales: { y: { beginAtZero: true } }
         }
       });
     }
 
     if (weekPaceChart) weekPaceChart.destroy();
-    if (labels.length > 0) {
+    if (labels.length > 0 && weekPaceCanvas) {
       weekPaceChart = new Chart(weekPaceCanvas.getContext('2d'), {
         type: 'line',
         data: {
@@ -1598,7 +1583,7 @@
       });
     }
 
-    // RPE vs Pace scatter (last ~60 days)
+    // ───────── RPE vs Pace scatter (existing) ─────────
     const points = [];
     const today = new Date();
     for (let i = 0; i < 60; i++) {
@@ -1617,7 +1602,7 @@
     }
 
     if (rpePaceChart) rpePaceChart.destroy();
-    if (points.length > 0) {
+    if (points.length > 0 && rpePaceCanvas) {
       rpePaceChart = new Chart(rpePaceCanvas.getContext('2d'), {
         type: 'scatter',
         data: {
@@ -1655,7 +1640,123 @@
         }
       });
     }
+
+    // ───────── NEW: Run type mix (last 60 days) ─────────
+    if (typeMixChart) typeMixChart.destroy();
+    if (typeMixCanvas) {
+      const typeCounts = {
+        Rest: 0,
+        Easy: 0,
+        Tempo: 0,
+        Intervals: 0,
+        Long: 0
+      };
+
+      Object.keys(runs).forEach(key => {
+        const r = runs[key];
+        if (!r || !r.actualDistance) return;
+        const d = new Date(key);
+        const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+        if (diffDays < 0 || diffDays > 60) return;
+
+        const t = r.type || 'Easy';
+        if (typeCounts.hasOwnProperty(t)) {
+          typeCounts[t] += 1;
+        }
+      });
+
+      const labelsType = [];
+      const dataType = [];
+      Object.entries(typeCounts).forEach(([type, count]) => {
+        if (count > 0) {
+          labelsType.push(type);
+          dataType.push(count);
+        }
+      });
+
+      if (labelsType.length > 0) {
+        typeMixChart = new Chart(typeMixCanvas.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: labelsType,
+            datasets: [{
+              data: dataType
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true, position: 'bottom' },
+              title: {
+                display: true,
+                text: 'Run type mix (last 60 days)'
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // ───────── NEW: RPE histogram (1–10, last 60 days) ─────────
+    if (rpeHistogramChart) rpeHistogramChart.destroy();
+    if (rpeHistogramCanvas) {
+      const rpeCounts = new Array(10).fill(0);
+
+      Object.keys(runs).forEach(key => {
+        const r = runs[key];
+        if (!r || !r.actualDistance || r.rpe == null) return;
+        const d = new Date(key);
+        const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+        if (diffDays < 0 || diffDays > 60) return;
+
+        const idx = Math.round(r.rpe) - 1;
+        if (idx >= 0 && idx < 10) {
+          rpeCounts[idx] += 1;
+        }
+      });
+
+      const histLabels = [];
+      const histData = [];
+      for (let i = 0; i < 10; i++) {
+        histLabels.push(String(i + 1));
+        histData.push(rpeCounts[i]);
+      }
+
+      const hasData = histData.some(v => v > 0);
+      if (hasData) {
+        rpeHistogramChart = new Chart(rpeHistogramCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: histLabels,
+            datasets: [{
+              label: 'RPE count (last 60 days)',
+              data: histData
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'RPE distribution (1–10)'
+              }
+            },
+            scales: {
+              x: {
+                title: { display: true, text: 'RPE' }
+              },
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Number of runs' }
+              }
+            }
+          }
+        });
+      }
+    }
   }
+
   // Coach – gives feedback similar to our chat
   function updateCoach(runs) {
     const today = new Date();
@@ -1916,6 +2017,129 @@
       : `Coach: ${enMsg}`;
   }
 
+	
+	  function updateAnalytics(runs) {
+    updateThisWeekStats(runs);
+    updateStreaks(runs);
+    updateCharts(runs);
+    updateCoach(runs);
+    updateSleepFatigueSummary(runs);
+    updateShoeSummary(runs);
+    updateRunningAnalysis(runs);
+  }
+
+    // High-level running analysis: last 4 weeks, longest run, session mix, typical easy pace
+  function updateRunningAnalysis(runs) {
+    if (!runningAnalysisEl) return;
+
+    const today = new Date();
+    const last60 = [];
+
+    // Collect all runs from last 60 days with actual distance
+    Object.keys(runs).forEach(key => {
+      const r = runs[key];
+      if (!r || !r.actualDistance) return;
+
+      const d = new Date(key);
+      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+      if (diffDays < 0 || diffDays > 60) return;
+
+      last60.push({
+        date: d,
+        key,
+        type: r.type || 'Easy',
+        dist: r.actualDistance,
+        paceSec: paceStringToSeconds(r.actualPace),
+        rpe: r.rpe ?? null
+      });
+    });
+
+    if (!last60.length) {
+      runningAnalysisEl.textContent =
+        coachLang === 'gr'
+          ? 'Ανάλυση: Καμία καταγεγραμμένη προπόνηση τις τελευταίες 60 ημέρες.'
+          : 'Analysis: No logged runs in the last 60 days.';
+      return;
+    }
+
+    last60.sort((a, b) => a.date - b.date);
+
+    // Last 28 days (≈ 4 weeks)
+    const last28Cutoff = new Date(today);
+    last28Cutoff.setDate(today.getDate() - 27);
+    let last28Dist = 0;
+
+    last60.forEach(r => {
+      if (r.date >= last28Cutoff) last28Dist += r.dist;
+    });
+
+    const avgWeekly = last28Dist / 4;
+
+    // Longest run
+    let longest = last60[0];
+    last60.forEach(r => {
+      if (r.dist > longest.dist) longest = r;
+    });
+    const longestDateStr = `${longest.date.getDate()}/${longest.date.getMonth() + 1}`;
+
+    // Session mix: easy/long vs quality (tempo/intervals / high RPE)
+    let easyCount = 0;
+    let qualCount = 0;
+    last60.forEach(r => {
+      const t = r.type;
+      const isEasy = t === 'Easy' || t === 'Long';
+      const isQuality = t === 'Tempo' || t === 'Intervals' || (r.rpe != null && r.rpe >= 7);
+      if (isQuality) qualCount++;
+      else if (isEasy) easyCount++;
+    });
+
+    // Typical easy pace (median of easy/long runs)
+    const easyPaces = last60
+      .filter(r => (r.type === 'Easy' || r.type === 'Long') && r.paceSec)
+      .map(r => r.paceSec);
+
+    let easyPaceText = null;
+    if (easyPaces.length) {
+      const med = medianValue(easyPaces);
+      const low = secondsToPace(med + 10);   // slightly easier side
+      const high = secondsToPace(med - 10);  // slightly faster side
+      easyPaceText = `${secondsToPace(med)} (~${high}–${low})`;
+    }
+
+    // Build EN / GR text
+    let enText =
+      `Last 4 weeks: ${last28Dist.toFixed(1)} km total (~${avgWeekly.toFixed(1)} km/week). `;
+
+    let grText =
+      `Τελευταίες 4 εβδομάδες: συνολικά ${last28Dist.toFixed(1)} km (~${avgWeekly.toFixed(1)} km/εβδομάδα). `;
+
+    if (longest.paceSec) {
+      const lp = secondsToPace(longest.paceSec);
+      enText += `Longest run: ${longest.dist.toFixed(1)} km on ${longestDateStr} at ~${lp} min/km. `;
+      grText += `Μεγαλύτερο τρέξιμο: ${longest.dist.toFixed(1)} km στις ${longestDateStr} με ~${lp} λεπτά/χλμ. `;
+    } else {
+      enText += `Longest run: ${longest.dist.toFixed(1)} km on ${longestDateStr}. `;
+      grText += `Μεγαλύτερο τρέξιμο: ${longest.dist.toFixed(1)} km στις ${longestDateStr}. `;
+    }
+
+    if (easyCount || qualCount) {
+      enText += `Session mix (last 60 days): ${easyCount} easy/long vs ${qualCount} quality (tempo/interval / hard). `;
+      grText += `Μοίρασμα προπονήσεων (τελευταίες 60 ημέρες): ${easyCount} easy/long vs ${qualCount} quality (tempo/interval / δυνατές). `;
+    }
+
+    if (easyPaceText) {
+      enText += `Typical easy pace: about ${easyPaceText} min/km.`;
+      grText += `Τυπικός easy ρυθμός: περίπου ${easyPaceText} λεπτά/χλμ.`;
+    }
+
+    runningAnalysisEl.textContent =
+      coachLang === 'gr'
+        ? `Ανάλυση: ${grText}`
+        : `Analysis: ${enText}`;
+  }
+
+
+
 
 
 
@@ -1988,14 +2212,16 @@
     shoeSummaryEl.innerHTML = html;
   }
 
-  function updateAnalytics(runs) {
+    function updateAnalytics(runs) {
     updateThisWeekStats(runs);
     updateStreaks(runs);
     updateCharts(runs);
     updateCoach(runs);
     updateSleepFatigueSummary(runs);
     updateShoeSummary(runs);
+    updateRunningAnalysis(runs);
   }
+
 
   // Supabase sync
   async function loadFromSupabase(userId) {
