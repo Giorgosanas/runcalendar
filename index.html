@@ -1496,7 +1496,7 @@
     const run = runs[key];
     if (!run || !run.actualDistance) continue;
 
-    const dow = (d.getDay() + 6) % 7;
+    const dow = (d.getDay() + 6) % 7; // 0=Mon ... 6=Sun
     const monday = new Date(d);
     monday.setDate(d.getDate() - dow);
     const mondayKey = formatDateKey(monday);
@@ -1504,6 +1504,7 @@
     if (!weekMap.has(mondayKey)) {
       weekMap.set(mondayKey, { dist: 0, paceSecSum: 0, distForPace: 0 });
     }
+
     const bucket = weekMap.get(mondayKey);
     bucket.dist += run.actualDistance;
 
@@ -1521,9 +1522,14 @@
 
   weekKeys.forEach(k => {
     const monday = new Date(k);
-    labels.push(`Week of ${monday.getDate()}/${monday.getMonth() + 1}`);
+    const short = `${monday.getDate()}/${monday.getMonth() + 1}`;
+
+    // ✅ 2-line label (fixes ugly rotated weeks)
+    labels.push(["Week", short]);
+
     const b = weekMap.get(k);
-    distData.push(b.dist.toFixed(1));
+    distData.push(Number(b.dist.toFixed(1)));
+
     if (b.distForPace > 0) {
       const avgSec = b.paceSecSum / b.distForPace;
       paceData.push(avgSec);
@@ -1532,7 +1538,18 @@
     }
   });
 
-  // weekly distance bar
+  // shared x-axis settings for weekly charts
+  const weeklyXAxis = {
+    ticks: {
+      maxRotation: 0,
+      minRotation: 0,
+      autoSkip: true,
+      autoSkipPadding: 16,
+      padding: 6
+    }
+  };
+
+  // ---------- weekly distance bar ----------
   if (weekDistanceChart) weekDistanceChart.destroy();
   if (labels.length > 0 && weekDistanceCanvas) {
     weekDistanceCanvas.parentElement.style.display = "block";
@@ -1547,15 +1564,19 @@
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+        scales: {
+          x: weeklyXAxis,
+          y: { beginAtZero: true }
+        }
       }
     });
   } else if (weekDistanceCanvas) {
     weekDistanceCanvas.parentElement.style.display = "none";
   }
 
-  // weekly pace line
+  // ---------- weekly pace line ----------
   if (weekPaceChart) weekPaceChart.destroy();
   if (labels.length > 0 && weekPaceCanvas) {
     weekPaceCanvas.parentElement.style.display = "block";
@@ -1571,6 +1592,7 @@
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -1583,6 +1605,7 @@
           }
         },
         scales: {
+          x: weeklyXAxis,
           y: {
             ticks: {
               callback: (v) => secondsToPace(v) || ''
@@ -1604,8 +1627,10 @@
     const key = formatDateKey(d);
     const run = runs[key];
     if (!run || !run.actualDistance || !run.actualPace || !run.rpe) continue;
+
     const paceSec = paceStringToSeconds(run.actualPace);
     if (!paceSec) continue;
+
     points.push({
       x: paceSec,
       y: run.rpe,
@@ -1640,9 +1665,7 @@
         scales: {
           x: {
             title: { display: true, text: 'Pace (min/km)' },
-            ticks: {
-              callback: (v) => secondsToPace(v) || ''
-            }
+            ticks: { callback: (v) => secondsToPace(v) || '' }
           },
           y: {
             title: { display: true, text: 'RPE (1–10)' },
@@ -1653,7 +1676,6 @@
       }
     });
   } else if (rpePaceCanvas) {
-    // HIDE this container if no RPE data → fixes your big gap
     rpePaceCanvas.parentElement.style.display = "none";
   }
 
@@ -1662,13 +1684,7 @@
     if (typeMixChart) typeMixChart.destroy();
 
     const typeMixContainer = typeMixCanvas.parentElement;
-    const typeCounts = {
-      Rest: 0,
-      Easy: 0,
-      Tempo: 0,
-      Intervals: 0,
-      Long: 0
-    };
+    const typeCounts = { Rest: 0, Easy: 0, Tempo: 0, Intervals: 0, Long: 0 };
 
     Object.keys(runs).forEach(key => {
       const r = runs[key];
@@ -1678,9 +1694,7 @@
       if (diffDays < 0 || diffDays > 60) return;
 
       const t = r.type || 'Easy';
-      if (typeCounts.hasOwnProperty(t)) {
-        typeCounts[t] += 1;
-      }
+      if (typeCounts.hasOwnProperty(t)) typeCounts[t] += 1;
     });
 
     const labelsType = [];
@@ -1698,18 +1712,13 @@
         type: 'doughnut',
         data: {
           labels: labelsType,
-          datasets: [{
-            data: dataType
-          }]
+          datasets: [{ data: dataType }]
         },
         options: {
           responsive: true,
           plugins: {
             legend: { display: true, position: 'bottom' },
-            title: {
-              display: true,
-              text: 'Run type mix (last 60 days)'
-            }
+            title: { display: true, text: 'Run type mix (last 60 days)' }
           }
         }
       });
@@ -1733,9 +1742,7 @@
       if (diffDays < 0 || diffDays > 60) return;
 
       const idx = Math.round(r.rpe) - 1;
-      if (idx >= 0 && idx < 10) {
-        rpeCounts[idx] += 1;
-      }
+      if (idx >= 0 && idx < 10) rpeCounts[idx] += 1;
     });
 
     const histLabels = [];
@@ -1761,19 +1768,11 @@
           responsive: true,
           plugins: {
             legend: { display: false },
-            title: {
-              display: true,
-              text: 'RPE distribution (1–10)'
-            }
+            title: { display: true, text: 'RPE distribution (1–10)' }
           },
           scales: {
-            x: {
-              title: { display: true, text: 'RPE' }
-            },
-            y: {
-              beginAtZero: true,
-              title: { display: true, text: 'Number of runs' }
-            }
+            x: { title: { display: true, text: 'RPE' } },
+            y: { beginAtZero: true, title: { display: true, text: 'Number of runs' } }
           }
         }
       });
@@ -1782,6 +1781,7 @@
     }
   }
 }
+
 
   // Coach – gives feedback similar to our chat
   function updateCoach(runs) {
@@ -2800,4 +2800,3 @@
 </script>
 </body>
 </html>
-
