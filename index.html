@@ -671,7 +671,7 @@
       <button id="forceClearPlanBtn" style="background:transparent;border:1px solid var(--danger);color:var(--danger);">
         Force clear
       </button>
-	<button id="exportICSBtn" class="btn">Export Plan to Calendar (.ics)</button>
+	<button id="exportICSBtn">Export Plan to Calendar (.ics)</button>
     </div>
 	
 
@@ -2214,6 +2214,60 @@
 
 })();
 
+
+// ===== ICS builder (required) =====
+function pad(n){ return String(n).padStart(2, "0"); }
+
+function formatLocalDT(dateStr, hh=8, mm=0) {
+  const [y,m,d] = dateStr.split("-").map(Number);
+  return `${y}${pad(m)}${pad(d)}T${pad(hh)}${pad(mm)}00`;
+}
+
+function escapeICS(text="") {
+  return String(text)
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+function buildICS(events) {
+  const now = new Date();
+  const stamp =
+    `${now.getUTCFullYear()}${pad(now.getUTCMonth()+1)}${pad(now.getUTCDate())}` +
+    `T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
+
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//RunCalendar//Training Plan//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH"
+  ];
+
+  for (const ev of events) {
+    // 08:00-09:00 by default (change if you want)
+    const dtStart = formatLocalDT(ev.date, 8, 0);
+    const dtEnd   = formatLocalDT(ev.date, 9, 0);
+    const uid = `${ev.date}-${Math.random().toString(16).slice(2)}@runcalendar`;
+
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:${escapeICS(ev.title || "Run")}`,
+      `DESCRIPTION:${escapeICS(ev.desc || "")}`,
+      "END:VEVENT"
+    );
+  }
+
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n");
+}
+
+
 	// ===== Calendar export (.ics) =====
 
 function addDays(date, days) {
@@ -2284,6 +2338,46 @@ document.getElementById("exportICSBtn")?.addEventListener("click", () => {
   const ics = buildICS(trainingEvents);   // buildICS is your existing function
   downloadICS("RunCalendar-Plan.ics", ics);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("exportICSBtn");
+  if (!btn) {
+    alert("Export button not found. Check id='exportICSBtn'.");
+    return;
+  }
+
+  btn.addEventListener("click", () => {
+    try {
+      // quick proof the click works
+      // (remove this alert later if you want)
+      // alert("Export clicked!");
+
+      const trainingEvents = buildTrainingEventsFromPlan(); // your function
+      const ics = buildICS(trainingEvents);                 // your function
+
+      // try normal download
+      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "RunCalendar-Plan.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      // iOS/PWA fallback: open the file link
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 2000);
+
+    } catch (e) {
+      alert("ICS export error: " + (e?.message || e));
+      console.error(e);
+    }
+  });
+});
+
 
 </script>
 
