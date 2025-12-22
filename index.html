@@ -2216,77 +2216,72 @@
 
 	// ===== Calendar export (.ics) =====
 
-// TODO: Replace this with YOUR real plan data from the app later.
-const trainingEvents = [
-  { date: "2026-01-05", title: "Easy Run", desc: "6 km easy" },
-  { date: "2026-01-07", title: "Tempo/Intervals", desc: "6 km total: 4×400m hard, 200m easy jog" },
-  { date: "2026-01-09", title: "Easy + Strides", desc: "5 km easy + 4×20s strides" },
-  { date: "2026-01-10", title: "Long Run", desc: "11 km long (easy)" },
-];
-
-function pad(n){ return String(n).padStart(2, "0"); }
-
-function formatLocalDT(dateStr, hh=8, mm=0) {
-  const [y,m,d] = dateStr.split("-").map(Number);
-  return `${y}${pad(m)}${pad(d)}T${pad(hh)}${pad(mm)}00`;
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+function toYYYYMMDD(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
-function escapeICS(text="") {
-  return String(text)
-    .replace(/\\/g, "\\\\")
-    .replace(/\n/g, "\\n")
-    .replace(/,/g, "\\,")
-    .replace(/;/g, "\\;");
-}
+// Put the REAL Monday of your Week 5 here:
+const week5Monday = new Date("2025-12-22"); // <-- change this
 
-function buildICS(events) {
-  const now = new Date();
-  const stamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth()+1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
+// Your plan (Week 5–18)
+const planWeeks = {
+  5: { Mon:"6 km easy", Wed:"5 km total: 3 km tempo", Fri:"4-5 km easy + 4x20s strides", Sat:"10 km long" },
+  6: { Mon:"6 km easy", Wed:"6 km total: 4x400m hard + 200m easy", Fri:"5 km easy", Sat:"11 km long" },
+  7: { Mon:"6 km easy", Wed:"6-7 km total: 3-4 km tempo", Fri:"5 km easy + 4x20s strides", Sat:"12 km long" },
+  8: { Mon:"6 km easy", Wed:"6 km total: 4 km tempo", Fri:"4-5 km easy", Sat:"12 km long" },
+  9: { Mon:"6 km easy", Wed:"7 km total: 4 km tempo", Fri:"5 km easy", Sat:"13 km long" },
+  10:{ Mon:"6-7 km easy", Wed:"7 km total: 4x400m hard + 1 km tempo", Fri:"5 km easy + 4x20s strides", Sat:"14 km long" },
+  11:{ Mon:"7 km easy", Wed:"8-9 km total: 6 km tempo", Fri:"5 km easy", Sat:"15 km long" },
+  12:{ Mon:"6 km easy", Wed:"7-8 km total: 5 km tempo", Fri:"4-5 km easy + 4x20s strides", Sat:"15 km long" },
+  13:{ Mon:"7 km easy", Wed:"8-9 km total: 6 km tempo", Fri:"5 km easy", Sat:"16 km long" },
+  14:{ Mon:"7 km easy", Wed:"7 km total: 5x400m hard + 200m easy", Fri:"5 km easy + 4x20s strides", Sat:"18 km long" },
+  15:{ Mon:"6 km easy", Wed:"6 km total: 4 km tempo", Fri:"4 km easy", Sat:"14 km long" },
+  16:{ Mon:"6 km easy", Wed:"5-6 km easy + 6x20s strides", Fri:"4 km easy", Sat:"12 km long" },
+  17:{ Mon:"5 km easy", Wed:"5 km total: 1 km light tempo", Fri:"3-4 km easy + 4x15s strides", Sat:"8 km long" },
+  18:{ Mon:"4-5 km easy", Wed:"3 km easy + 4x15-20s strides", Fri:"Optional 2 km shakeout", Sat:"RACE DAY: Half Marathon" },
+};
 
-  let ics = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//RunCalendar//Training Plan//EN",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH"
-  ];
+function buildTrainingEventsFromPlan() {
+  const events = [];
+  const weekNums = Object.keys(planWeeks).map(Number).sort((a,b)=>a-b);
+  const firstWeek = weekNums[0];
 
-  for (const ev of events) {
-    const dtStart = formatLocalDT(ev.date, 8, 0); // 08:00
-    const dtEnd   = formatLocalDT(ev.date, 9, 0); // 09:00
-    const uid = `${ev.date}-${Math.random().toString(16).slice(2)}@runcalendar`;
+  for (const wk of weekNums) {
+    const weekOffsetDays = (wk - firstWeek) * 7;
+    const base = addDays(week5Monday, weekOffsetDays);
 
-    ics.push(
-      "BEGIN:VEVENT",
-      `UID:${uid}`,
-      `DTSTAMP:${stamp}`,
-      `DTSTART:${dtStart}`,
-      `DTEND:${dtEnd}`,
-      `SUMMARY:${escapeICS(ev.title)}`,
-      `DESCRIPTION:${escapeICS(ev.desc)}`,
-      "END:VEVENT"
-    );
+    // Mon=0, Wed=2, Fri=4, Sat=5
+    const mapping = [
+      { key:"Mon", add:0, title:"Easy Run" },
+      { key:"Wed", add:2, title:"Tempo/Intervals" },
+      { key:"Fri", add:4, title:"Easy + Strides" },
+      { key:"Sat", add:5, title:"Long Run" },
+    ];
+
+    for (const m of mapping) {
+      const d = addDays(base, m.add);
+      events.push({
+        date: toYYYYMMDD(d),
+        title: m.title,
+        desc: planWeeks[wk][m.key]
+      });
+    }
   }
-
-  ics.push("END:VCALENDAR");
-  return ics.join("\r\n");
+  return events;
 }
 
-function downloadICS(filename, content) {
-  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-// IMPORTANT: this must run after the button exists in the page
+// Then in your export button click:
 document.getElementById("exportICSBtn")?.addEventListener("click", () => {
-  const ics = buildICS(trainingEvents);
+  const trainingEvents = buildTrainingEventsFromPlan();
+  const ics = buildICS(trainingEvents);   // buildICS is your existing function
   downloadICS("RunCalendar-Plan.ics", ics);
 });
 
