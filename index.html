@@ -24,7 +24,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
-   <style>
+  <style>
     :root {
       --bg: #0b1220;
       --card: #020617;
@@ -540,12 +540,8 @@
 
     /* MOBILE LAYOUT POLISH */
     @media (max-width: 700px) {
-      /* more breathing room around the whole page */
-      main {
-        padding: 0.9rem 0.9rem 1.4rem;
-      }
+      main { padding: 0.9rem 0.9rem 1.4rem; }
 
-      /* calendar + stats stacked vertically and full width */
       .calendar-card {
         width: 100%;
         max-width: 100%;
@@ -560,12 +556,8 @@
         margin-top: 0.8rem;
       }
 
-      /* extra gap between the two stats cards */
-      #analyticsBox {
-        margin-top: 1rem;
-      }
+      #analyticsBox { margin-top: 1rem; }
 
-      /* stats grid becomes single column */
       .stats-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -574,13 +566,7 @@
         margin-right: auto;
       }
 
-      /* calendar compact on mobile */
-      .calendar {
-        gap: 2px;
-        width: 100%;
-        max-width: 100%;
-        grid-template-columns: repeat(7, 1fr);
-      }
+      .calendar { gap: 2px; width: 100%; max-width: 100%; grid-template-columns: repeat(7, 1fr); }
 
       .day {
         min-height: 70px;
@@ -590,18 +576,10 @@
         box-sizing: border-box;
       }
 
-      .weekday {
-        font-size: 0.7rem;
-      }
+      .weekday { font-size: 0.7rem; }
 
-      /* header not sticky on mobile */
-      header {
-        position: static;
-        top: auto;
-        box-shadow: none;
-      }
+      header { position: static; top: auto; box-shadow: none; }
 
-      /* auth bar stacked full-width */
       .auth-bar {
         flex-direction: column;
         align-items: stretch;
@@ -610,11 +588,8 @@
 
       .auth-bar input,
       .auth-bar button,
-      .auth-bar .sync-status {
-        width: 100%;
-      }
+      .auth-bar .sync-status { width: 100%; }
 
-      /* toolbar stacked with space */
       .toolbar {
         flex-direction: column;
         align-items: stretch;
@@ -634,11 +609,8 @@
 
       .toolbar-group select,
       .toolbar-group input,
-      .toolbar-group button {
-        width: 100%;
-      }
+      .toolbar-group button { width: 100%; }
 
-      /* floating Today button visible on mobile */
       .fab-today {
         display: inline-flex;
         align-items: center;
@@ -646,11 +618,8 @@
       }
     }
   </style>
-
-
-
-  </style>
 </head>
+
 <body data-theme="dark">
 <header>
   <div class="header-top">
@@ -676,7 +645,6 @@
 </header>
 
 <main>
-  <!-- Training plan + color theme toolbar -->
   <div class="toolbar">
     <div class="toolbar-group">
       <label for="planSelect">Plan</label>
@@ -729,35 +697,21 @@
   </div>
 
   <div class="stats-grid">
-    <!-- Week summary + streaks + PDF + shoes + sleep -->
     <div class="stats" id="statsBox">
       <h3>This Week</h3>
-      <div class="stats-row">
-        <span class="label">Planned km</span>
-        <span id="statsPlannedKm">0</span>
-      </div>
-      <div class="stats-row">
-        <span class="label">Done km</span>
-        <span id="statsDoneKm">0</span>
-      </div>
-      <div class="stats-row">
-        <span class="label">Runs logged</span>
-        <span id="statsRuns">0</span>
-      </div>
-      <div class="stats-row" style="margin-top:0.4rem;">
-        <span class="label">Current streak</span>
-        <span id="streakCurrent">0 days</span>
-      </div>
-      <div class="stats-row">
-        <span class="label">Best streak</span>
-        <span id="streakBest">0 days</span>
-      </div>
+      <div class="stats-row"><span class="label">Planned km</span><span id="statsPlannedKm">0</span></div>
+      <div class="stats-row"><span class="label">Done km</span><span id="statsDoneKm">0</span></div>
+      <div class="stats-row"><span class="label">Runs logged</span><span id="statsRuns">0</span></div>
+
+      <div class="stats-row" style="margin-top:0.4rem;"><span class="label">Current streak</span><span id="streakCurrent">0 days</span></div>
+      <div class="stats-row"><span class="label">Best streak</span><span id="streakBest">0 days</span></div>
+
       <div id="sleepFatigueSummary"></div>
       <div id="shoeSummary"></div>
+
       <button class="btn btn-primary" id="pdfBtn" style="margin-top:0.6rem;">Download month report (PDF)</button>
     </div>
 
-    <!-- Charts + coach -->
     <div class="stats" id="analyticsBox">
       <div class="stats-header-row">
         <h3>Progress & Coach</h3>
@@ -769,42 +723,35 @@
           </select>
         </div>
       </div>
-            <!-- 1. Weekly distance -->
+
       <div class="chart-container">
         <canvas id="weekDistanceCanvas" height="120"></canvas>
       </div>
 
-      <!-- 2. Weekly average pace -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="weekPaceCanvas" height="120"></canvas>
       </div>
 
-      <!-- 3. RPE vs pace scatter -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="rpePaceCanvas" height="120"></canvas>
       </div>
 
-      <!-- 4. Run type mix -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="typeMixCanvas" height="120"></canvas>
       </div>
 
-      <!-- 5. RPE histogram -->
       <div class="chart-container" style="margin-top:0.45rem;">
         <canvas id="rpeHistogramCanvas" height="120"></canvas>
       </div>
 
       <p id="coachAdvice"></p>
       <div id="runningAnalysis" style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-muted);"></div>
-
-
     </div>
   </div>
 </main>
 
 <button class="fab-today" id="todayFab">📅 Today</button>
 
-<!-- Modal -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <h2>Edit Run</h2>
@@ -832,39 +779,21 @@
       <div class="help-text" id="templateHint"></div>
     </div>
 
-    <div class="form-group">
-      <label>Planned distance (km)</label>
-      <input type="number" step="0.1" id="plannedDistance" />
-    </div>
-    <div class="form-group">
-      <label>Planned pace (min/km)</label>
-      <input type="text" id="plannedPace" placeholder="e.g. 6:00 or 5:30–5:40" />
-    </div>
-    <div class="form-group">
-      <label>Actual distance (km)</label>
-      <input type="number" step="0.1" id="actualDistance" />
-    </div>
-    <div class="form-group">
-      <label>Actual pace (min/km)</label>
-      <input type="text" id="actualPace" placeholder="e.g. 5:50" />
-    </div>
-    <div class="form-group">
-      <label>How it felt (RPE 1–10)</label>
-      <input type="number" min="1" max="10" id="rpe" />
-    </div>
+    <div class="form-group"><label>Planned distance (km)</label><input type="number" step="0.1" id="plannedDistance" /></div>
+    <div class="form-group"><label>Planned pace (min/km)</label><input type="text" id="plannedPace" placeholder="e.g. 6:00 or 5:30–5:40" /></div>
+    <div class="form-group"><label>Actual distance (km)</label><input type="number" step="0.1" id="actualDistance" /></div>
+    <div class="form-group"><label>Actual pace (min/km)</label><input type="text" id="actualPace" placeholder="e.g. 5:50" /></div>
+    <div class="form-group"><label>How it felt (RPE 1–10)</label><input type="number" min="1" max="10" id="rpe" /></div>
+
     <div class="form-group">
       <label>Shoe</label>
       <input type="text" id="shoe" placeholder="e.g. Pegasus 41" list="shoeOptions" />
       <datalist id="shoeOptions"></datalist>
     </div>
-    <div class="form-group">
-      <label>Sleep quality (1–10)</label>
-      <input type="number" min="1" max="10" id="sleep" />
-    </div>
-    <div class="form-group">
-      <label>Fatigue (1–10)</label>
-      <input type="number" min="1" max="10" id="fatigue" />
-    </div>
+
+    <div class="form-group"><label>Sleep quality (1–10)</label><input type="number" min="1" max="10" id="sleep" /></div>
+    <div class="form-group"><label>Fatigue (1–10)</label><input type="number" min="1" max="10" id="fatigue" /></div>
+
     <div class="form-group">
       <label>Notes (route, weather, splits…)</label>
       <textarea id="notes" rows="3"></textarea>
@@ -881,6 +810,7 @@
 </div>
 
 <script>
+(() => {
   // 🔧 Your Supabase config
   const SUPABASE_URL = "https://bdhqktzwchswzwlmrpmd.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkaHFrdHp3Y2hzd3p3bG1ycG1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMzY2NTUsImV4cCI6MjA4MDYxMjY1NX0.WAElPc6oei5haF1qqgqaEKmKrb82g4GYTQ6m-uVXdPk";
@@ -889,58 +819,37 @@
   const { jsPDF } = window.jspdf;
 
   const COLOR_THEMES = {
-    default: {
-      '--primary': '#3b82f6',
-      '--bg-grad-highlight': 'rgba(37,99,235,0.3)'
-    },
-    ocean: {
-      '--primary': '#0ea5e9',
-      '--bg-grad-highlight': 'rgba(14,165,233,0.35)'
-    },
-    sunset: {
-      '--primary': '#f97316',
-      '--bg-grad-highlight': 'rgba(249,115,22,0.35)'
-    },
-    forest: {
-      '--primary': '#22c55e',
-      '--bg-grad-highlight': 'rgba(34,197,94,0.35)'
-    },
-    neon: {
-      '--primary': '#a855f7',
-      '--bg-grad-highlight': 'rgba(168,85,247,0.4)'
-    }
+    default: { '--primary': '#3b82f6', '--bg-grad-highlight': 'rgba(37,99,235,0.3)' },
+    ocean:   { '--primary': '#0ea5e9', '--bg-grad-highlight': 'rgba(14,165,233,0.35)' },
+    sunset:  { '--primary': '#f97316', '--bg-grad-highlight': 'rgba(249,115,22,0.35)' },
+    forest:  { '--primary': '#22c55e', '--bg-grad-highlight': 'rgba(34,197,94,0.35)' },
+    neon:    { '--primary': '#a855f7', '--bg-grad-highlight': 'rgba(168,85,247,0.4)' }
   };
 
-  // Structured workout templates
   const WORKOUT_TEMPLATES = {
     '4x400_1k_tempo': {
       name: '4×400m + 1 km tempo',
       type: 'Intervals',
-      totalDistance: 1 + 4 * 0.4 + 1 + 1, // warmup + reps + tempo + cooldown
+      totalDistance: 1 + 4 * 0.4 + 1 + 1,
       pace: 'See parts',
-      notes:
-        '1 km easy warmup, then 4 × 400 m @ 4:50–5:05 with 90s rest, then 1 km tempo @ 5:20–5:40, then 1 km easy cooldown.'
+      notes: '1 km easy warmup, then 4 × 400 m @ 4:50–5:05 with 90s rest, then 1 km tempo @ 5:20–5:40, then 1 km easy cooldown.'
     },
     '6x800_vo2': {
       name: '6×800m VO₂',
       type: 'Intervals',
-      totalDistance: 2 + 6 * 0.8 + 1, // 2 km WU, 6x800, 1 km CD
+      totalDistance: 2 + 6 * 0.8 + 1,
       pace: 'See parts',
-      notes:
-        '2 km easy warmup, then 6 × 800 m @ 5K pace with 2 min jog/walk, then 1 km easy cooldown.'
+      notes: '2 km easy warmup, then 6 × 800 m @ 5K pace with 2 min jog/walk, then 1 km easy cooldown.'
     },
     'tempo20': {
       name: '20 min tempo',
       type: 'Tempo',
-      totalDistance: 1 + 1 + 4, // approximate 20 min tempo as ~4 km
+      totalDistance: 1 + 1 + 4,
       pace: 'Tempo effort',
-      notes:
-        '1 km easy warmup, then 20 min tempo at comfortably hard pace (can say 1–2 words), then 1 km easy cooldown (~4 km total).'
+      notes: '1 km easy warmup, then 20 min tempo at comfortably hard pace (can say 1–2 words), then 1 km easy cooldown (~4 km total).'
     }
   };
 
-  // Training plans: generator + which weekdays to use (priority order)
-  // dow: 0=Mon ... 6=Sun
   const TRAINING_PLANS = {
     '5k-beginner': {
       name: '5K Beginner',
@@ -949,7 +858,6 @@
         const progress = totalWeeks > 1 ? week / (totalWeeks - 1) : 0;
         const longDist = 4 + Math.round(progress * 4);
         const easyDist = 3 + Math.round(progress * 2);
-
         if (dow === 0) return { type: 'Easy', dist: easyDist, pace: '6:20', notes: 'Easy conversational run.' };
         if (dow === 2) return { type: 'Tempo', dist: 3, pace: '5:40', notes: 'Short tempo in the middle.' };
         if (dow === 4) return { type: 'Easy', dist: easyDist, pace: '6:15', notes: 'Shakeout run.' };
@@ -964,7 +872,6 @@
         const progress = totalWeeks > 1 ? week / (totalWeeks - 1) : 0;
         const longDist = 6 + Math.round(progress * 8);
         const midLong = 5 + Math.round(progress * 4);
-
         if (dow === 0) return { type: 'Easy', dist: 5, pace: '6:15', notes: 'Relaxed easy run.' };
         if (dow === 2) return { type: 'Intervals', dist: 6, pace: '5:20', notes: 'Intervals or fartlek session.' };
         if (dow === 4) return { type: 'Tempo', dist: midLong, pace: '5:35', notes: 'Controlled tempo effort.' };
@@ -980,7 +887,6 @@
         const longDist = 8 + Math.round(progress * 13);
         const easyDist = 6 + Math.round(progress * 3);
         const midLong = 10 + Math.round(progress * 5);
-
         if (dow === 0) return { type: 'Easy', dist: easyDist, pace: '6:10', notes: 'Recovery from long run.' };
         if (dow === 2) return { type: 'Intervals', dist: 8, pace: '5:20', notes: 'Interval or VO2 session.' };
         if (dow === 3) return { type: 'Easy', dist: 6, pace: '6:15', notes: 'Easy run, low effort.' };
@@ -997,7 +903,6 @@
         const longDist = 14 + Math.round(progress * 18);
         const easyDist = 8 + Math.round(progress * 4);
         const midLong = 12 + Math.round(progress * 6);
-
         if (dow === 0) return { type: 'Easy', dist: easyDist, pace: '6:15', notes: 'Easy recovery from long run.' };
         if (dow === 2) return { type: 'Intervals', dist: 10, pace: '5:15', notes: 'Speed / VO2 session.' };
         if (dow === 3) return { type: 'Easy', dist: 8, pace: '6:10', notes: 'Comfortable easy run.' };
@@ -1053,7 +958,7 @@
   const shareCodeEl = document.getElementById('shareCode');
   const syncStatus = document.getElementById('syncStatus');
 
-    const pdfBtn = document.getElementById('pdfBtn');
+  const pdfBtn = document.getElementById('pdfBtn');
   const coachAdviceEl = document.getElementById('coachAdvice');
   const runningAnalysisEl = document.getElementById('runningAnalysis');
 
@@ -1062,7 +967,6 @@
   const rpePaceCanvas = document.getElementById('rpePaceCanvas');
   const typeMixCanvas = document.getElementById('typeMixCanvas');
   const rpeHistogramCanvas = document.getElementById('rpeHistogramCanvas');
-
 
   const planSelect = document.getElementById('planSelect');
   const planStartDateInput = document.getElementById('planStartDate');
@@ -1086,13 +990,11 @@
   let typeMixChart = null;
   let rpeHistogramChart = null;
 
-
   let currentMonth = new Date();
   currentMonth.setDate(1);
   let selectedDateKey = null;
   let currentUser = null;
 
-  // friend view state
   let friendMode = false;
   let friendId = null;
   let friendRunsCache = {};
@@ -1100,7 +1002,6 @@
   let coachLang = localStorage.getItem('runCalendarCoachLang') || 'en';
   coachLangSelect.value = coachLang;
 
-  // THEME: dark/light
   function applyTheme(theme) {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('runCalendarTheme', theme);
@@ -1126,7 +1027,6 @@
     applyTheme(current === 'dark' ? 'light' : 'dark');
   });
 
-  // COLOR THEME
   function applyColorTheme(name) {
     const theme = COLOR_THEMES[name] || COLOR_THEMES.default;
     Object.entries(theme).forEach(([varName, value]) => {
@@ -1139,16 +1039,10 @@
   colorThemeSelect.value = savedColorTheme;
   applyColorTheme(savedColorTheme);
 
-  colorThemeSelect.addEventListener('change', () => {
-    const val = colorThemeSelect.value;
-    applyColorTheme(val);
-  });
+  colorThemeSelect.addEventListener('change', () => applyColorTheme(colorThemeSelect.value));
 
-  // STORAGE
   function getStorage() {
-    if (friendMode) {
-      return friendRunsCache || {};
-    }
+    if (friendMode) return friendRunsCache || {};
     if (!currentUser) return {};
     const key = 'runCalendarData_' + currentUser.id;
     const raw = localStorage.getItem(key);
@@ -1156,10 +1050,7 @@
   }
 
   function setStorage(data) {
-    if (friendMode) {
-      friendRunsCache = data;
-      return;
-    }
+    if (friendMode) { friendRunsCache = data; return; }
     if (!currentUser) return;
     const key = 'runCalendarData_' + currentUser.id;
     localStorage.setItem(key, JSON.stringify(data));
@@ -1172,7 +1063,6 @@
     return `${y}-${m}-${d}`;
   }
 
-  // CALENDAR
   function renderCalendar() {
     calendarEl.innerHTML = '';
 
@@ -1204,9 +1094,7 @@
       const dateObj = new Date(year, month, day);
       const key = formatDateKey(dateObj);
 
-      if (key === todayKey) {
-        cell.classList.add('today');
-      }
+      if (key === todayKey) cell.classList.add('today');
 
       const num = document.createElement('div');
       num.className = 'day-number';
@@ -1241,12 +1129,10 @@
       }
 
       cell.addEventListener('click', () => {
-        if (friendMode) {
-          alert("You are viewing a friend's calendar (read-only).");
-          return;
-        }
+        if (friendMode) { alert("You are viewing a friend's calendar (read-only)."); return; }
         openModal(key);
       });
+
       calendarEl.appendChild(cell);
     }
 
@@ -1283,42 +1169,25 @@
     selectedDateKey = null;
   }
 
-  // Workout template application
   workoutTemplateEl.addEventListener('change', () => {
     const tplId = workoutTemplateEl.value;
     const tpl = WORKOUT_TEMPLATES[tplId];
-    if (!tpl) {
-      templateHintEl.textContent = '';
-      return;
-    }
+    if (!tpl) { templateHintEl.textContent = ''; return; }
     templateHintEl.textContent = tpl.name + ' – auto-filled into this run.';
 
-    if (!runTypeEl.value || runTypeEl.value === 'Rest') {
-      runTypeEl.value = tpl.type;
-    }
-    if (!plannedDistanceEl.value && tpl.totalDistance) {
-      plannedDistanceEl.value = tpl.totalDistance.toFixed(1);
-    }
-    if (!plannedPaceEl.value && tpl.pace) {
-      plannedPaceEl.value = tpl.pace;
-    }
-    if (!notesEl.value) {
-      notesEl.value = tpl.notes;
-    } else {
-      notesEl.value += (notesEl.value.endsWith('\n') ? '' : '\n') + tpl.notes;
-    }
+    if (!runTypeEl.value || runTypeEl.value === 'Rest') runTypeEl.value = tpl.type;
+    if (!plannedDistanceEl.value && tpl.totalDistance) plannedDistanceEl.value = tpl.totalDistance.toFixed(1);
+    if (!plannedPaceEl.value && tpl.pace) plannedPaceEl.value = tpl.pace;
+
+    if (!notesEl.value) notesEl.value = tpl.notes;
+    else notesEl.value += (notesEl.value.endsWith('\n') ? '' : '\n') + tpl.notes;
   });
 
-  // SAVE / DELETE
   saveBtn.addEventListener('click', async () => {
-    if (friendMode) {
-      alert('Friend view is read-only. Switch back to your calendar to edit runs.');
-      return;
-    }
+    if (friendMode) { alert('Friend view is read-only. Switch back to your calendar to edit runs.'); return; }
     if (!selectedDateKey) return;
 
     const dateKey = selectedDateKey;
-
     const runs = getStorage();
     const existing = runs[dateKey];
 
@@ -1341,17 +1210,13 @@
     renderCalendar();
     closeModal();
 
-    if (currentUser) {
-      await saveRunToSupabase(currentUser.id, dateKey, runObj);
-    }
+    if (currentUser) await saveRunToSupabase(currentUser.id, dateKey, runObj);
   });
 
   deleteBtn.addEventListener('click', async () => {
-    if (friendMode) {
-      alert('Friend view is read-only. Switch back to your calendar to edit runs.');
-      return;
-    }
+    if (friendMode) { alert('Friend view is read-only. Switch back to your calendar to edit runs.'); return; }
     if (!selectedDateKey) return;
+
     const dateKey = selectedDateKey;
     const runs = getStorage();
     delete runs[dateKey];
@@ -1359,45 +1224,29 @@
     renderCalendar();
     closeModal();
 
-    if (currentUser) {
-      await deleteRunFromSupabase(currentUser.id, dateKey);
-    }
+    if (currentUser) await deleteRunFromSupabase(currentUser.id, dateKey);
   });
 
   closeBtn.addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModal();
-  });
+  modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) closeModal(); });
 
-  prevMonthBtn.addEventListener('click', () => {
-    currentMonth.setMonth(currentMonth.getMonth() - 1);
-    renderCalendar();
-  });
+  prevMonthBtn.addEventListener('click', () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); });
+  nextMonthBtn.addEventListener('click', () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); });
 
-  nextMonthBtn.addEventListener('click', () => {
-    currentMonth.setMonth(currentMonth.getMonth() + 1);
-    renderCalendar();
-  });
-
-  // Today FAB
   todayFab.addEventListener('click', () => {
     const today = new Date();
     currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     renderCalendar();
-    const todayKey = formatDateKey(today);
-    if (!friendMode) openModal(todayKey);
+    if (!friendMode) openModal(formatDateKey(today));
   });
 
-  // WEEK STATS
   function updateThisWeekStats(runs) {
     const now = new Date();
     const dayOfWeek = (now.getDay() + 6) % 7;
     const monday = new Date(now);
     monday.setDate(now.getDate() - dayOfWeek);
 
-    let plannedKm = 0;
-    let doneKm = 0;
-    let runCount = 0;
+    let plannedKm = 0, doneKm = 0, runCount = 0;
 
     for (let i = 0; i < 7; i++) {
       const d = new Date(monday);
@@ -1407,10 +1256,7 @@
       if (!run) continue;
 
       if (run.plannedDistance) plannedKm += run.plannedDistance;
-      if (run.actualDistance) {
-        doneKm += run.actualDistance;
-        runCount += 1;
-      }
+      if (run.actualDistance) { doneKm += run.actualDistance; runCount += 1; }
     }
 
     statsPlannedKm.textContent = plannedKm.toFixed(1);
@@ -1418,7 +1264,6 @@
     statsRuns.textContent = runCount;
   }
 
-  // STREAKS
   function updateStreaks(runs) {
     const today = new Date();
     let currentStreak = 0;
@@ -1430,12 +1275,8 @@
       const key = formatDateKey(temp);
       const run = runs[key];
       const hasRun = run && run.actualDistance && run.actualDistance > 0;
-      if (hasRun) {
-        streak++;
-        bestStreak = Math.max(bestStreak, streak);
-      } else {
-        streak = 0;
-      }
+      if (hasRun) { streak++; bestStreak = Math.max(bestStreak, streak); }
+      else streak = 0;
       temp.setDate(temp.getDate() - 1);
     }
 
@@ -1444,19 +1285,14 @@
       const key = formatDateKey(temp2);
       const run = runs[key];
       const hasRun = run && run.actualDistance && run.actualDistance > 0;
-      if (hasRun) {
-        currentStreak++;
-        temp2.setDate(temp2.getDate() - 1);
-      } else {
-        break;
-      }
+      if (hasRun) { currentStreak++; temp2.setDate(temp2.getDate() - 1); }
+      else break;
     }
 
     streakCurrentEl.textContent = `${currentStreak} day${currentStreak === 1 ? '' : 's'}`;
     streakBestEl.textContent = `${bestStreak} day${bestStreak === 1 ? '' : 's'}`;
   }
 
-  // Pace helpers
   function paceStringToSeconds(str) {
     if (!str) return null;
     const cleaned = String(str).split('–')[0].split('-')[0].trim();
@@ -1475,7 +1311,7 @@
     return `${m}:${String(s).padStart(2,'0')}`;
   }
 
-    function medianValue(arr) {
+  function medianValue(arr) {
     if (!arr || !arr.length) return null;
     const sorted = [...arr].sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
@@ -1483,312 +1319,199 @@
     return (sorted[mid - 1] + sorted[mid]) / 2;
   }
 
+  function updateCharts(runs) {
+    const now = new Date();
+    const weekMap = new Map();
 
-    function updateCharts(runs) {
-  const now = new Date();
-  const weekMap = new Map();
+    for (let offset = 0; offset < 6 * 7 + 7; offset++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - offset);
+      const key = formatDateKey(d);
+      const run = runs[key];
+      if (!run || !run.actualDistance) continue;
 
-  // ---------- Weekly distance & pace ----------
-  for (let offset = 0; offset < 6 * 7 + 7; offset++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - offset);
-    const key = formatDateKey(d);
-    const run = runs[key];
-    if (!run || !run.actualDistance) continue;
+      const dow = (d.getDay() + 6) % 7;
+      const monday = new Date(d);
+      monday.setDate(d.getDate() - dow);
+      const mondayKey = formatDateKey(monday);
 
-    const dow = (d.getDay() + 6) % 7; // 0=Mon ... 6=Sun
-    const monday = new Date(d);
-    monday.setDate(d.getDate() - dow);
-    const mondayKey = formatDateKey(monday);
+      if (!weekMap.has(mondayKey)) weekMap.set(mondayKey, { dist: 0, paceSecSum: 0, distForPace: 0 });
+      const bucket = weekMap.get(mondayKey);
 
-    if (!weekMap.has(mondayKey)) {
-      weekMap.set(mondayKey, { dist: 0, paceSecSum: 0, distForPace: 0 });
+      bucket.dist += run.actualDistance;
+      const paceSec = paceStringToSeconds(run.actualPace);
+      if (paceSec) {
+        bucket.paceSecSum += paceSec * run.actualDistance;
+        bucket.distForPace += run.actualDistance;
+      }
     }
 
-    const bucket = weekMap.get(mondayKey);
-    bucket.dist += run.actualDistance;
+    const weekKeys = Array.from(weekMap.keys()).sort();
+    const labels = [];
+    const distData = [];
+    const paceData = [];
 
-    const paceSec = paceStringToSeconds(run.actualPace);
-    if (paceSec) {
-      bucket.paceSecSum += paceSec * run.actualDistance;
-      bucket.distForPace += run.actualDistance;
-    }
-  }
+    weekKeys.forEach(k => {
+      const monday = new Date(k);
+      const short = `${monday.getDate()}/${monday.getMonth() + 1}`;
+      labels.push(["Week", short]);
 
-  const weekKeys = Array.from(weekMap.keys()).sort();
-  const labels = [];
-  const distData = [];
-  const paceData = [];
-
-  weekKeys.forEach(k => {
-    const monday = new Date(k);
-    const short = `${monday.getDate()}/${monday.getMonth() + 1}`;
-
-    // ✅ 2-line label (fixes ugly rotated weeks)
-    labels.push(["Week", short]);
-
-    const b = weekMap.get(k);
-    distData.push(Number(b.dist.toFixed(1)));
-
-    if (b.distForPace > 0) {
-      const avgSec = b.paceSecSum / b.distForPace;
-      paceData.push(avgSec);
-    } else {
-      paceData.push(null);
-    }
-  });
-
-  // shared x-axis settings for weekly charts
-  const weeklyXAxis = {
-    ticks: {
-      maxRotation: 0,
-      minRotation: 0,
-      autoSkip: true,
-      autoSkipPadding: 16,
-      padding: 6
-    }
-  };
-
-  // ---------- weekly distance bar ----------
-  if (weekDistanceChart) weekDistanceChart.destroy();
-  if (labels.length > 0 && weekDistanceCanvas) {
-    weekDistanceCanvas.parentElement.style.display = "block";
-    weekDistanceChart = new Chart(weekDistanceCanvas.getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Weekly distance (km)',
-          data: distData
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: weeklyXAxis,
-          y: { beginAtZero: true }
-        }
-      }
-    });
-  } else if (weekDistanceCanvas) {
-    weekDistanceCanvas.parentElement.style.display = "none";
-  }
-
-  // ---------- weekly pace line ----------
-  if (weekPaceChart) weekPaceChart.destroy();
-  if (labels.length > 0 && weekPaceCanvas) {
-    weekPaceCanvas.parentElement.style.display = "block";
-    weekPaceChart = new Chart(weekPaceCanvas.getContext('2d'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Average pace (min/km)',
-          data: paceData,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const val = ctx.parsed.y;
-                return val ? `Avg pace: ${secondsToPace(val)} min/km` : '';
-              }
-            }
-          }
-        },
-        scales: {
-          x: weeklyXAxis,
-          y: {
-            ticks: {
-              callback: (v) => secondsToPace(v) || ''
-            }
-          }
-        }
-      }
-    });
-  } else if (weekPaceCanvas) {
-    weekPaceCanvas.parentElement.style.display = "none";
-  }
-
-  // ---------- RPE vs pace scatter ----------
-  const points = [];
-  const today = new Date();
-  for (let i = 0; i < 60; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    const key = formatDateKey(d);
-    const run = runs[key];
-    if (!run || !run.actualDistance || !run.actualPace || !run.rpe) continue;
-
-    const paceSec = paceStringToSeconds(run.actualPace);
-    if (!paceSec) continue;
-
-    points.push({
-      x: paceSec,
-      y: run.rpe,
-      label: `${d.getDate()}/${d.getMonth() + 1}`
-    });
-  }
-
-  if (rpePaceChart) rpePaceChart.destroy();
-  if (points.length > 0 && rpePaceCanvas) {
-    rpePaceCanvas.parentElement.style.display = "block";
-    rpePaceChart = new Chart(rpePaceCanvas.getContext('2d'), {
-      type: 'scatter',
-      data: {
-        datasets: [{
-          label: 'RPE vs pace',
-          data: points
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const raw = ctx.raw;
-                return `${raw.label}: ${secondsToPace(raw.x)} min/km, RPE ${raw.y}`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            title: { display: true, text: 'Pace (min/km)' },
-            ticks: { callback: (v) => secondsToPace(v) || '' }
-          },
-          y: {
-            title: { display: true, text: 'RPE (1–10)' },
-            min: 1,
-            max: 10
-          }
-        }
-      }
-    });
-  } else if (rpePaceCanvas) {
-    rpePaceCanvas.parentElement.style.display = "none";
-  }
-
-  // ---------- Run type mix (last 60 days) ----------
-  if (typeof typeMixCanvas !== "undefined") {
-    if (typeMixChart) typeMixChart.destroy();
-
-    const typeMixContainer = typeMixCanvas.parentElement;
-    const typeCounts = { Rest: 0, Easy: 0, Tempo: 0, Intervals: 0, Long: 0 };
-
-    Object.keys(runs).forEach(key => {
-      const r = runs[key];
-      if (!r || !r.actualDistance) return;
-      const d = new Date(key);
-      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
-      if (diffDays < 0 || diffDays > 60) return;
-
-      const t = r.type || 'Easy';
-      if (typeCounts.hasOwnProperty(t)) typeCounts[t] += 1;
+      const b = weekMap.get(k);
+      distData.push(Number(b.dist.toFixed(1)));
+      if (b.distForPace > 0) paceData.push(b.paceSecSum / b.distForPace);
+      else paceData.push(null);
     });
 
-    const labelsType = [];
-    const dataType = [];
-    Object.entries(typeCounts).forEach(([type, count]) => {
-      if (count > 0) {
-        labelsType.push(type);
-        dataType.push(count);
-      }
-    });
+    const weeklyXAxis = {
+      ticks: { maxRotation: 0, minRotation: 0, autoSkip: true, autoSkipPadding: 16, padding: 6 }
+    };
 
-    if (labelsType.length > 0) {
-      typeMixContainer.style.display = "block";
-      typeMixChart = new Chart(typeMixCanvas.getContext('2d'), {
-        type: 'doughnut',
-        data: {
-          labels: labelsType,
-          datasets: [{ data: dataType }]
-        },
+    if (weekDistanceChart) weekDistanceChart.destroy();
+    if (labels.length > 0 && weekDistanceCanvas) {
+      weekDistanceCanvas.parentElement.style.display = "block";
+      weekDistanceChart = new Chart(weekDistanceCanvas.getContext('2d'), {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Weekly distance (km)', data: distData }] },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: weeklyXAxis, y: { beginAtZero: true } }
+        }
+      });
+    } else if (weekDistanceCanvas) {
+      weekDistanceCanvas.parentElement.style.display = "none";
+    }
+
+    if (weekPaceChart) weekPaceChart.destroy();
+    if (labels.length > 0 && weekPaceCanvas) {
+      weekPaceCanvas.parentElement.style.display = "block";
+      weekPaceChart = new Chart(weekPaceCanvas.getContext('2d'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Average pace (min/km)', data: paceData, tension: 0.3 }] },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
           plugins: {
-            legend: { display: true, position: 'bottom' },
-            title: { display: true, text: 'Run type mix (last 60 days)' }
+            legend: { display: false },
+            tooltip: { callbacks: { label: (ctx) => ctx.parsed.y ? `Avg pace: ${secondsToPace(ctx.parsed.y)} min/km` : '' } }
+          },
+          scales: {
+            x: weeklyXAxis,
+            y: { ticks: { callback: (v) => secondsToPace(v) || '' } }
           }
         }
       });
-    } else {
-      typeMixContainer.style.display = "none";
-    }
-  }
-
-  // ---------- RPE histogram (1–10, last 60 days) ----------
-  if (typeof rpeHistogramCanvas !== "undefined") {
-    if (rpeHistogramChart) rpeHistogramChart.destroy();
-
-    const histContainer = rpeHistogramCanvas.parentElement;
-    const rpeCounts = new Array(10).fill(0);
-
-    Object.keys(runs).forEach(key => {
-      const r = runs[key];
-      if (!r || !r.actualDistance || r.rpe == null) return;
-      const d = new Date(key);
-      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
-      if (diffDays < 0 || diffDays > 60) return;
-
-      const idx = Math.round(r.rpe) - 1;
-      if (idx >= 0 && idx < 10) rpeCounts[idx] += 1;
-    });
-
-    const histLabels = [];
-    const histData = [];
-    for (let i = 0; i < 10; i++) {
-      histLabels.push(String(i + 1));
-      histData.push(rpeCounts[i]);
+    } else if (weekPaceCanvas) {
+      weekPaceCanvas.parentElement.style.display = "none";
     }
 
-    const hasData = histData.some(v => v > 0);
-    if (hasData) {
-      histContainer.style.display = "block";
-      rpeHistogramChart = new Chart(rpeHistogramCanvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: histLabels,
-          datasets: [{
-            label: 'RPE count (last 60 days)',
-            data: histData
-          }]
-        },
+    const points = [];
+    const today = new Date();
+    for (let i = 0; i < 60; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = formatDateKey(d);
+      const run = runs[key];
+      if (!run || !run.actualDistance || !run.actualPace || !run.rpe) continue;
+
+      const paceSec = paceStringToSeconds(run.actualPace);
+      if (!paceSec) continue;
+      points.push({ x: paceSec, y: run.rpe, label: `${d.getDate()}/${d.getMonth() + 1}` });
+    }
+
+    if (rpePaceChart) rpePaceChart.destroy();
+    if (points.length > 0 && rpePaceCanvas) {
+      rpePaceCanvas.parentElement.style.display = "block";
+      rpePaceChart = new Chart(rpePaceCanvas.getContext('2d'), {
+        type: 'scatter',
+        data: { datasets: [{ label: 'RPE vs pace', data: points }] },
         options: {
           responsive: true,
           plugins: {
             legend: { display: false },
-            title: { display: true, text: 'RPE distribution (1–10)' }
+            tooltip: { callbacks: { label: (ctx) => `${ctx.raw.label}: ${secondsToPace(ctx.raw.x)} min/km, RPE ${ctx.raw.y}` } }
           },
           scales: {
-            x: { title: { display: true, text: 'RPE' } },
-            y: { beginAtZero: true, title: { display: true, text: 'Number of runs' } }
+            x: { title: { display: true, text: 'Pace (min/km)' }, ticks: { callback: (v) => secondsToPace(v) || '' } },
+            y: { title: { display: true, text: 'RPE (1–10)' }, min: 1, max: 10 }
           }
         }
       });
-    } else {
-      histContainer.style.display = "none";
+    } else if (rpePaceCanvas) {
+      rpePaceCanvas.parentElement.style.display = "none";
+    }
+
+    if (typeof typeMixCanvas !== "undefined") {
+      if (typeMixChart) typeMixChart.destroy();
+      const typeMixContainer = typeMixCanvas.parentElement;
+      const typeCounts = { Rest: 0, Easy: 0, Tempo: 0, Intervals: 0, Long: 0 };
+
+      Object.keys(runs).forEach(key => {
+        const r = runs[key];
+        if (!r || !r.actualDistance) return;
+        const d = new Date(key);
+        const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+        if (diffDays < 0 || diffDays > 60) return;
+        const t = r.type || 'Easy';
+        if (typeCounts.hasOwnProperty(t)) typeCounts[t] += 1;
+      });
+
+      const labelsType = [];
+      const dataType = [];
+      Object.entries(typeCounts).forEach(([type, count]) => {
+        if (count > 0) { labelsType.push(type); dataType.push(count); }
+      });
+
+      if (labelsType.length > 0) {
+        typeMixContainer.style.display = "block";
+        typeMixChart = new Chart(typeMixCanvas.getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: labelsType, datasets: [{ data: dataType }] },
+          options: { responsive: true, plugins: { legend: { display: true, position: 'bottom' }, title: { display: true, text: 'Run type mix (last 60 days)' } } }
+        });
+      } else typeMixContainer.style.display = "none";
+    }
+
+    if (typeof rpeHistogramCanvas !== "undefined") {
+      if (rpeHistogramChart) rpeHistogramChart.destroy();
+      const histContainer = rpeHistogramCanvas.parentElement;
+      const rpeCounts = new Array(10).fill(0);
+
+      Object.keys(runs).forEach(key => {
+        const r = runs[key];
+        if (!r || !r.actualDistance || r.rpe == null) return;
+        const d = new Date(key);
+        const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+        if (diffDays < 0 || diffDays > 60) return;
+        const idx = Math.round(r.rpe) - 1;
+        if (idx >= 0 && idx < 10) rpeCounts[idx] += 1;
+      });
+
+      const histLabels = [];
+      const histData = [];
+      for (let i = 0; i < 10; i++) { histLabels.push(String(i + 1)); histData.push(rpeCounts[i]); }
+
+      const hasData = histData.some(v => v > 0);
+      if (hasData) {
+        histContainer.style.display = "block";
+        rpeHistogramChart = new Chart(rpeHistogramCanvas.getContext('2d'), {
+          type: 'bar',
+          data: { labels: histLabels, datasets: [{ label: 'RPE count (last 60 days)', data: histData }] },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false }, title: { display: true, text: 'RPE distribution (1–10)' } },
+            scales: { x: { title: { display: true, text: 'RPE' } }, y: { beginAtZero: true, title: { display: true, text: 'Number of runs' } } }
+          }
+        });
+      } else histContainer.style.display = "none";
     }
   }
-}
 
-
-  // Coach – gives feedback similar to our chat
   function updateCoach(runs) {
     const today = new Date();
-    const lookbackDays = 28; // last 4 weeks
+    const lookbackDays = 28;
 
-    // Collect recent runs (up to 28 days)
     const recent = [];
     for (let i = 0; i < lookbackDays; i++) {
       const d = new Date(today);
@@ -1796,101 +1519,51 @@
       const key = formatDateKey(d);
       const run = runs[key];
       if (!run || !run.actualDistance) continue;
-
       const paceSec = paceStringToSeconds(run.actualPace);
       recent.push({
-        date: d,
-        key,
-        type: run.type || "Easy",
-        dist: run.actualDistance,
-        rpe: run.rpe ?? null,
-        sleep: run.sleep ?? null,
-        fatigue: run.fatigue ?? null,
-        paceSec
+        date: d, key, type: run.type || "Easy", dist: run.actualDistance,
+        rpe: run.rpe ?? null, sleep: run.sleep ?? null, fatigue: run.fatigue ?? null, paceSec
       });
     }
 
-    // No runs at all
     if (recent.length === 0) {
-      const en =
-        "No runs logged yet. Start with 3–4 km at a pace where you can talk in full sentences. " +
-        "Log how it felt (RPE 4–6) and I’ll adjust your next runs.";
-      const gr =
-        "Δεν έχεις καταγράψει ακόμη προπονήσεις. Ξεκίνα με 3–4 km σε ρυθμό που μπορείς να μιλάς άνετα. " +
-        "Γράψε πώς σου φάνηκε (RPE 4–6) και μετά θα προσαρμόσω τις επόμενες προπονήσεις σου.";
-
-      coachAdviceEl.textContent = coachLang === "gr"
-        ? `Προπονητής: ${gr}`
-        : `Coach: ${en}`;
+      const en = "No runs logged yet. Start with 3–4 km at a pace where you can talk in full sentences. Log how it felt (RPE 4–6) and I’ll adjust your next runs.";
+      const gr = "Δεν έχεις καταγράψει ακόμη προπονήσεις. Ξεκίνα με 3–4 km σε ρυθμό που μπορείς να μιλάς άνετα. Γράψε πώς σου φάνηκε (RPE 4–6) και μετά θα προσαρμόσω τις επόμενες προπονήσεις σου.";
+      coachAdviceEl.textContent = coachLang === "gr" ? `Προπονητής: ${gr}` : `Coach: ${en}`;
       return;
     }
 
-    // ─────────────────────────────────────────
-    // 1. LAST RUN FEEDBACK
-    // ─────────────────────────────────────────
-    const lastRun = recent[0]; // newest
+    const lastRun = recent[0];
     const lastRunPace = lastRun.paceSec ? secondsToPace(lastRun.paceSec) : null;
-    let effortEn = "";
-    let effortGr = "";
+    let effortEn = "", effortGr = "";
 
     if (lastRun.rpe != null) {
-      if (lastRun.rpe <= 4) {
-        effortEn = "very easy / relaxed effort";
-        effortGr = "πολύ χαλαρή προσπάθεια";
-      } else if (lastRun.rpe <= 6) {
-        effortEn = "controlled, comfortably hard effort";
-        effortGr = "ελεγχόμενη, άνετα δύσκολη προσπάθεια";
-      } else if (lastRun.rpe <= 8) {
-        effortEn = "hard effort, good stimulus";
-        effortGr = "δυνατή προσπάθεια, καλό ερέθισμα";
-      } else {
-        effortEn = "near-maximal effort, be careful with recovery";
-        effortGr = "σχεδόν μέγιστη προσπάθεια, πρόσεξε την αποκατάσταση";
-      }
+      if (lastRun.rpe <= 4) { effortEn = "very easy / relaxed effort"; effortGr = "πολύ χαλαρή προσπάθεια"; }
+      else if (lastRun.rpe <= 6) { effortEn = "controlled, comfortably hard effort"; effortGr = "ελεγχόμενη, άνετα δύσκολη προσπάθεια"; }
+      else if (lastRun.rpe <= 8) { effortEn = "hard effort, good stimulus"; effortGr = "δυνατή προσπάθεια, καλό ερέθισμα"; }
+      else { effortEn = "near-maximal effort, be careful with recovery"; effortGr = "σχεδόν μέγιστη προσπάθεια, πρόσεξε την αποκατάσταση"; }
     }
 
     const lastRunDateStr = `${lastRun.date.getDate()}/${lastRun.date.getMonth() + 1}`;
 
-    // ─────────────────────────────────────────
-    // 2. WEEKLY VOLUME TREND (calendar weeks Mon–Sun)
-    // ─────────────────────────────────────────
-    // same Monday logic as updateThisWeekStats
-    const dow = (today.getDay() + 6) % 7; // 0 = Mon
-    const mondayThisWeek = new Date(today);
-    mondayThisWeek.setDate(today.getDate() - dow);
-    const sundayThisWeek = new Date(mondayThisWeek);
-    sundayThisWeek.setDate(mondayThisWeek.getDate() + 6);
+    const dow = (today.getDay() + 6) % 7;
+    const mondayThisWeek = new Date(today); mondayThisWeek.setDate(today.getDate() - dow);
+    const sundayThisWeek = new Date(mondayThisWeek); sundayThisWeek.setDate(mondayThisWeek.getDate() + 6);
 
-    const mondayLastWeek = new Date(mondayThisWeek);
-    mondayLastWeek.setDate(mondayThisWeek.getDate() - 7);
-    const sundayLastWeek = new Date(mondayLastWeek);
-    sundayLastWeek.setDate(mondayLastWeek.getDate() + 6);
+    const mondayLastWeek = new Date(mondayThisWeek); mondayLastWeek.setDate(mondayThisWeek.getDate() - 7);
+    const sundayLastWeek = new Date(mondayLastWeek); sundayLastWeek.setDate(mondayLastWeek.getDate() + 6);
 
-    const weekFinished = dow === 6; // true only on Sunday
+    const weekFinished = dow === 6;
 
-    let thisWeekDist = 0;
-    let lastWeekDist = 0;
-
+    let thisWeekDist = 0, lastWeekDist = 0;
     recent.forEach(r => {
       const d = r.date;
-      if (d >= mondayThisWeek && d <= sundayThisWeek) {
-        thisWeekDist += r.dist;
-      } else if (d >= mondayLastWeek && d <= sundayLastWeek) {
-        lastWeekDist += r.dist;
-      }
+      if (d >= mondayThisWeek && d <= sundayThisWeek) thisWeekDist += r.dist;
+      else if (d >= mondayLastWeek && d <= sundayLastWeek) lastWeekDist += r.dist;
     });
 
-    // ─────────────────────────────────────────
-    // 3. EASY PACE TREND (older vs newer easy runs)
-    // ─────────────────────────────────────────
-    const isEasyLike = (r) =>
-      (r.type === "Easy" || r.type === "Long" || (r.rpe != null && r.rpe <= 6)) &&
-      r.paceSec;
-
-    const easyRuns = recent
-      .filter(isEasyLike)
-      .slice()
-      .sort((a, b) => a.date - b.date); // oldest → newest
+    const isEasyLike = (r) => (r.type === "Easy" || r.type === "Long" || (r.rpe != null && r.rpe <= 6)) && r.paceSec;
+    const easyRuns = recent.filter(isEasyLike).slice().sort((a, b) => a.date - b.date);
 
     const median = (arr) => {
       if (!arr.length) return null;
@@ -1900,29 +1573,20 @@
       return (sorted[mid - 1] + sorted[mid]) / 2;
     };
 
-    let medianEasyOlder = null;
-    let medianEasyNewer = null;
-
+    let medianEasyOlder = null, medianEasyNewer = null;
     if (easyRuns.length >= 6) {
       const half = Math.floor(easyRuns.length / 2);
-      const olderPaces = easyRuns.slice(0, half).map(r => r.paceSec);
-      const newerPaces = easyRuns.slice(half).map(r => r.paceSec);
-      medianEasyOlder = median(olderPaces);
-      medianEasyNewer = median(newerPaces);
+      medianEasyOlder = median(easyRuns.slice(0, half).map(r => r.paceSec));
+      medianEasyNewer = median(easyRuns.slice(half).map(r => r.paceSec));
     }
 
     const allEasyPaces = easyRuns.map(r => r.paceSec);
     const currentEasySec = allEasyPaces.length ? median(allEasyPaces) : (6 * 60);
     const currentEasyStr = secondsToPace(currentEasySec);
 
-    // ─────────────────────────────────────────
-    // 4. Sleep & fatigue last 3 days
-    // ─────────────────────────────────────────
-    const sleepVals = [];
-    const fatigueVals = [];
+    const sleepVals = [], fatigueVals = [];
     for (let i = 0; i < 3; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
+      const d = new Date(today); d.setDate(today.getDate() - i);
       const key = formatDateKey(d);
       const run = runs[key];
       if (!run) continue;
@@ -1933,56 +1597,30 @@
     const avgSleep3 = avg(sleepVals);
     const avgFatigue3 = avg(fatigueVals);
 
-    // ─────────────────────────────────────────
-    // 5. Build messages (EN / GR)
-    // ─────────────────────────────────────────
-    let enMsg = "";
-    let grMsg = "";
+    let enMsg = "", grMsg = "";
 
-    // Last run block
     enMsg += `Last run (${lastRunDateStr}): ${lastRun.dist.toFixed(1)} km `;
     grMsg += `Τελευταία προπόνηση (${lastRunDateStr}): ${lastRun.dist.toFixed(1)} km `;
 
-    if (lastRunPace) {
-      enMsg += `at ~${lastRunPace} min/km`;
-      grMsg += `σε ~${lastRunPace} λεπτά/χλμ`;
-    } else {
-      enMsg += `with no pace logged`;
-      grMsg += `χωρίς καταχωρημένο ρυθμό`;
-    }
+    if (lastRunPace) { enMsg += `at ~${lastRunPace} min/km`; grMsg += `σε ~${lastRunPace} λεπτά/χλμ`; }
+    else { enMsg += `with no pace logged`; grMsg += `χωρίς καταχωρημένο ρυθμό`; }
 
-    if (lastRun.rpe != null) {
-      enMsg += `, RPE ${lastRun.rpe} (${effortEn}). `;
-      grMsg += `, RPE ${lastRun.rpe} (${effortGr}). `;
-    } else {
-      enMsg += `. Next time, add RPE so I can judge the effort better. `;
-      grMsg += `. Την επόμενη φορά βάλε και RPE για να καταλαβαίνω καλύτερα το φορτίο. `;
-    }
+    if (lastRun.rpe != null) { enMsg += `, RPE ${lastRun.rpe} (${effortEn}). `; grMsg += `, RPE ${lastRun.rpe} (${effortGr}). `; }
+    else { enMsg += `. Next time, add RPE so I can judge the effort better. `; grMsg += `. Την επόμενη φορά βάλε και RPE για να καταλαβαίνω καλύτερα το φορτίο. `; }
 
-    // Weekly volume trend (calendar week)
     if (thisWeekDist > 0 && lastWeekDist > 0) {
       if (!weekFinished) {
-        // WEEK NOT FINISHED → only "so far" statement, no % judgment
-        enMsg += `So far this week (Mon–today) you’ve run ${thisWeekDist.toFixed(1)} km. ` +
-                 `Last week (Mon–Sun) you did ${lastWeekDist.toFixed(1)} km. ` +
-                 `We’ll see the full increase or decrease once this week is complete. `;
-        grMsg += `Μέχρι τώρα αυτή την εβδομάδα (Δευτέρα–σήμερα) έχεις κάνει ${thisWeekDist.toFixed(1)} km. ` +
-                 `Την προηγούμενη εβδομάδα (Δευτέρα–Κυριακή) έκανες ${lastWeekDist.toFixed(1)} km. ` +
-                 `Θα δούμε την πραγματική αύξηση/μείωση όταν ολοκληρωθεί η εβδομάδα. `;
+        enMsg += `So far this week (Mon–today) you’ve run ${thisWeekDist.toFixed(1)} km. Last week (Mon–Sun) you did ${lastWeekDist.toFixed(1)} km. We’ll see the full increase or decrease once this week is complete. `;
+        grMsg += `Μέχρι τώρα αυτή την εβδομάδα (Δευτέρα–σήμερα) έχεις κάνει ${thisWeekDist.toFixed(1)} km. Την προηγούμενη εβδομάδα (Δευτέρα–Κυριακή) έκανες ${lastWeekDist.toFixed(1)} km. Θα δούμε την πραγματική αύξηση/μείωση όταν ολοκληρωθεί η εβδομάδα. `;
       } else {
-        // WEEK FINISHED (Sunday) → full % comparison
         const diff = thisWeekDist - lastWeekDist;
         const perc = (diff / lastWeekDist) * 100;
         if (perc > 20) {
-          enMsg += `This week you ran ${thisWeekDist.toFixed(1)} km vs ${lastWeekDist.toFixed(1)} km last week (≈${perc.toFixed(0)}% up). ` +
-                   `Nice progress, but try not to increase more than ~10–20% per week to keep it safe. `;
-          grMsg += `Αυτή την εβδομάδα έκανες ${thisWeekDist.toFixed(1)} km σε σχέση με ${lastWeekDist.toFixed(1)} km την προηγούμενη (≈${perc.toFixed(0)}% αύξηση). ` +
-                   `Πολύ καλή πρόοδος, αλλά προσπάθησε να μη ξεπερνάς ~10–20% αύξηση στον εβδομαδιαίο όγκο για να είσαι ασφαλής. `;
+          enMsg += `This week you ran ${thisWeekDist.toFixed(1)} km vs ${lastWeekDist.toFixed(1)} km last week (≈${perc.toFixed(0)}% up). Nice progress, but try not to increase more than ~10–20% per week to keep it safe. `;
+          grMsg += `Αυτή την εβδομάδα έκανες ${thisWeekDist.toFixed(1)} km σε σχέση με ${lastWeekDist.toFixed(1)} km την προηγούμενη (≈${perc.toFixed(0)}% αύξηση). Πολύ καλή πρόοδος, αλλά προσπάθησε να μη ξεπερνάς ~10–20% αύξηση στον εβδομαδιαίο όγκο για να είσαι ασφαλής. `;
         } else if (perc < -20) {
-          enMsg += `Your weekly volume dropped (${thisWeekDist.toFixed(1)} km vs ${lastWeekDist.toFixed(1)} km). ` +
-                   `That’s okay if life was busy or you felt tired—just build back gradually next week. `;
-          grMsg += `Ο εβδομαδιαίος όγκος σου έπεσε (${thisWeekDist.toFixed(1)} km σε σχέση με ${lastWeekDist.toFixed(1)} km). ` +
-                   `Είναι ΟΚ αν η εβδομάδα ήταν δύσκολη ή ένιωθες κουρασμένος· χτίσε ξανά σιγά-σιγά την επόμενη. `;
+          enMsg += `Your weekly volume dropped (${thisWeekDist.toFixed(1)} km vs ${lastWeekDist.toFixed(1)} km). That’s okay if life was busy or you felt tired—just build back gradually next week. `;
+          grMsg += `Ο εβδομαδιαίος όγκος σου έπεσε (${thisWeekDist.toFixed(1)} km σε σχέση με ${lastWeekDist.toFixed(1)} km). Είναι ΟΚ αν η εβδομάδα ήταν δύσκολη ή ένιωθες κουρασμένος· χτίσε ξανά σιγά-σιγά την επόμενη. `;
         } else {
           enMsg += `Weekly volume is fairly stable (${thisWeekDist.toFixed(1)} km vs ${lastWeekDist.toFixed(1)} km), which is perfect for consistent progress. `;
           grMsg += `Ο εβδομαδιαίος όγκος είναι αρκετά σταθερός (${thisWeekDist.toFixed(1)} km σε σχέση με ${lastWeekDist.toFixed(1)} km), ιδανικό για σταθερή πρόοδο. `;
@@ -1990,9 +1628,8 @@
       }
     }
 
-    // Easy pace trend (older vs newer)
     if (medianEasyOlder && medianEasyNewer) {
-      const diffSec = medianEasyOlder - medianEasyNewer; // >0 = faster now
+      const diffSec = medianEasyOlder - medianEasyNewer;
       const absDiff = Math.abs(diffSec);
       const diffStr = secondsToPace(absDiff);
 
@@ -2011,7 +1648,6 @@
       grMsg += `Δεν έχω ακόμη αρκετά εύκολα ή χαμηλού RPE τρεξίματα για να συγκρίνω παλιότερο με πιο πρόσφατο ρυθμό. Συνέχισε να καταγράφεις εύκολα τρεξίματα με ρυθμό + RPE και θα βλέπουμε πώς εξελίσσεται ο easy pace σου. `;
     }
 
-    // Sleep / fatigue block
     if (avgSleep3 != null || avgFatigue3 != null) {
       if (avgSleep3 != null) {
         enMsg += `Last 3 days sleep avg is ${avgSleep3.toFixed(1)}/10. `;
@@ -2031,143 +1667,14 @@
       }
     }
 
-    // Next-run suggestion based on THIS WEEK volume
     const baseForNext = thisWeekDist || lastWeekDist || 10;
-    const targetDist = Math.min(Math.max(baseForNext / 3, 4), 12); // 4–12 km
+    const targetDist = Math.min(Math.max(baseForNext / 3, 4), 12);
 
     enMsg += `For your next easy run, aim for about ${targetDist.toFixed(1)} km around ${currentEasyStr} min/km at RPE 5–6 so you finish feeling like you could do a bit more.`;
     grMsg += `Για την επόμενη εύκολη προπόνηση, στόχευσε περίπου στα ${targetDist.toFixed(1)} km γύρω στα ${currentEasyStr} λεπτά/χλμ με RPE 5–6, ώστε να τελειώσεις νιώθοντας ότι θα μπορούσες να συνεχίσεις λίγο ακόμα.`;
 
-    coachAdviceEl.textContent = coachLang === "gr"
-      ? `Προπονητής: ${grMsg}`
-      : `Coach: ${enMsg}`;
+    coachAdviceEl.textContent = coachLang === "gr" ? `Προπονητής: ${grMsg}` : `Coach: ${enMsg}`;
   }
-
-	
-	  function updateAnalytics(runs) {
-    updateThisWeekStats(runs);
-    updateStreaks(runs);
-    updateCharts(runs);
-    updateCoach(runs);
-    updateSleepFatigueSummary(runs);
-    updateShoeSummary(runs);
-    updateRunningAnalysis(runs);
-  }
-
-    // High-level running analysis: last 4 weeks, longest run, session mix, typical easy pace
-  function updateRunningAnalysis(runs) {
-    if (!runningAnalysisEl) return;
-
-    const today = new Date();
-    const last60 = [];
-
-    // Collect all runs from last 60 days with actual distance
-    Object.keys(runs).forEach(key => {
-      const r = runs[key];
-      if (!r || !r.actualDistance) return;
-
-      const d = new Date(key);
-      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
-      if (diffDays < 0 || diffDays > 60) return;
-
-      last60.push({
-        date: d,
-        key,
-        type: r.type || 'Easy',
-        dist: r.actualDistance,
-        paceSec: paceStringToSeconds(r.actualPace),
-        rpe: r.rpe ?? null
-      });
-    });
-
-    if (!last60.length) {
-      runningAnalysisEl.textContent =
-        coachLang === 'gr'
-          ? 'Ανάλυση: Καμία καταγεγραμμένη προπόνηση τις τελευταίες 60 ημέρες.'
-          : 'Analysis: No logged runs in the last 60 days.';
-      return;
-    }
-
-    last60.sort((a, b) => a.date - b.date);
-
-    // Last 28 days (≈ 4 weeks)
-    const last28Cutoff = new Date(today);
-    last28Cutoff.setDate(today.getDate() - 27);
-    let last28Dist = 0;
-
-    last60.forEach(r => {
-      if (r.date >= last28Cutoff) last28Dist += r.dist;
-    });
-
-    const avgWeekly = last28Dist / 4;
-
-    // Longest run
-    let longest = last60[0];
-    last60.forEach(r => {
-      if (r.dist > longest.dist) longest = r;
-    });
-    const longestDateStr = `${longest.date.getDate()}/${longest.date.getMonth() + 1}`;
-
-    // Session mix: easy/long vs quality (tempo/intervals / high RPE)
-    let easyCount = 0;
-    let qualCount = 0;
-    last60.forEach(r => {
-      const t = r.type;
-      const isEasy = t === 'Easy' || t === 'Long';
-      const isQuality = t === 'Tempo' || t === 'Intervals' || (r.rpe != null && r.rpe >= 7);
-      if (isQuality) qualCount++;
-      else if (isEasy) easyCount++;
-    });
-
-    // Typical easy pace (median of easy/long runs)
-    const easyPaces = last60
-      .filter(r => (r.type === 'Easy' || r.type === 'Long') && r.paceSec)
-      .map(r => r.paceSec);
-
-    let easyPaceText = null;
-    if (easyPaces.length) {
-      const med = medianValue(easyPaces);
-      const low = secondsToPace(med + 10);   // slightly easier side
-      const high = secondsToPace(med - 10);  // slightly faster side
-      easyPaceText = `${secondsToPace(med)} (~${high}–${low})`;
-    }
-
-    // Build EN / GR text
-    let enText =
-      `Last 4 weeks: ${last28Dist.toFixed(1)} km total (~${avgWeekly.toFixed(1)} km/week). `;
-
-    let grText =
-      `Τελευταίες 4 εβδομάδες: συνολικά ${last28Dist.toFixed(1)} km (~${avgWeekly.toFixed(1)} km/εβδομάδα). `;
-
-    if (longest.paceSec) {
-      const lp = secondsToPace(longest.paceSec);
-      enText += `Longest run: ${longest.dist.toFixed(1)} km on ${longestDateStr} at ~${lp} min/km. `;
-      grText += `Μεγαλύτερο τρέξιμο: ${longest.dist.toFixed(1)} km στις ${longestDateStr} με ~${lp} λεπτά/χλμ. `;
-    } else {
-      enText += `Longest run: ${longest.dist.toFixed(1)} km on ${longestDateStr}. `;
-      grText += `Μεγαλύτερο τρέξιμο: ${longest.dist.toFixed(1)} km στις ${longestDateStr}. `;
-    }
-
-    if (easyCount || qualCount) {
-      enText += `Session mix (last 60 days): ${easyCount} easy/long vs ${qualCount} quality (tempo/interval / hard). `;
-      grText += `Μοίρασμα προπονήσεων (τελευταίες 60 ημέρες): ${easyCount} easy/long vs ${qualCount} quality (tempo/interval / δυνατές). `;
-    }
-
-    if (easyPaceText) {
-      enText += `Typical easy pace: about ${easyPaceText} min/km.`;
-      grText += `Τυπικός easy ρυθμός: περίπου ${easyPaceText} λεπτά/χλμ.`;
-    }
-
-    runningAnalysisEl.textContent =
-      coachLang === 'gr'
-        ? `Ανάλυση: ${grText}`
-        : `Analysis: ${enText}`;
-  }
-
-
-
-
-
 
   function updateSleepFatigueSummary(runs) {
     const now = new Date();
@@ -2213,7 +1720,6 @@
       shoeTotals[name] += r.actualDistance;
     });
 
-    // update datalist
     shoeOptionsEl.innerHTML = '';
     Object.keys(shoeTotals).forEach(name => {
       const opt = document.createElement('option');
@@ -2238,7 +1744,80 @@
     shoeSummaryEl.innerHTML = html;
   }
 
-    function updateAnalytics(runs) {
+  function updateRunningAnalysis(runs) {
+    if (!runningAnalysisEl) return;
+
+    const today = new Date();
+    const last60 = [];
+
+    Object.keys(runs).forEach(key => {
+      const r = runs[key];
+      if (!r || !r.actualDistance) return;
+      const d = new Date(key);
+      const diffDays = (today - d) / (1000 * 60 * 60 * 24);
+      if (diffDays < 0 || diffDays > 60) return;
+      last60.push({ date: d, key, type: r.type || 'Easy', dist: r.actualDistance, paceSec: paceStringToSeconds(r.actualPace), rpe: r.rpe ?? null });
+    });
+
+    if (!last60.length) {
+      runningAnalysisEl.textContent = coachLang === 'gr' ? 'Ανάλυση: Καμία καταγεγραμμένη προπόνηση τις τελευταίες 60 ημέρες.' : 'Analysis: No logged runs in the last 60 days.';
+      return;
+    }
+
+    last60.sort((a, b) => a.date - b.date);
+
+    const last28Cutoff = new Date(today);
+    last28Cutoff.setDate(today.getDate() - 27);
+    let last28Dist = 0;
+    last60.forEach(r => { if (r.date >= last28Cutoff) last28Dist += r.dist; });
+    const avgWeekly = last28Dist / 4;
+
+    let longest = last60[0];
+    last60.forEach(r => { if (r.dist > longest.dist) longest = r; });
+    const longestDateStr = `${longest.date.getDate()}/${longest.date.getMonth() + 1}`;
+
+    let easyCount = 0, qualCount = 0;
+    last60.forEach(r => {
+      const t = r.type;
+      const isEasy = t === 'Easy' || t === 'Long';
+      const isQuality = t === 'Tempo' || t === 'Intervals' || (r.rpe != null && r.rpe >= 7);
+      if (isQuality) qualCount++;
+      else if (isEasy) easyCount++;
+    });
+
+    const easyPaces = last60.filter(r => (r.type === 'Easy' || r.type === 'Long') && r.paceSec).map(r => r.paceSec);
+    let easyPaceText = null;
+    if (easyPaces.length) {
+      const med = medianValue(easyPaces);
+      const low = secondsToPace(med + 10);
+      const high = secondsToPace(med - 10);
+      easyPaceText = `${secondsToPace(med)} (~${high}–${low})`;
+    }
+
+    let enText = `Last 4 weeks: ${last28Dist.toFixed(1)} km total (~${avgWeekly.toFixed(1)} km/week). `;
+    let grText = `Τελευταίες 4 εβδομάδες: συνολικά ${last28Dist.toFixed(1)} km (~${avgWeekly.toFixed(1)} km/εβδομάδα). `;
+
+    if (longest.paceSec) {
+      const lp = secondsToPace(longest.paceSec);
+      enText += `Longest run: ${longest.dist.toFixed(1)} km on ${longestDateStr} at ~${lp} min/km. `;
+      grText += `Μεγαλύτερο τρέξιμο: ${longest.dist.toFixed(1)} km στις ${longestDateStr} με ~${lp} λεπτά/χλμ. `;
+    } else {
+      enText += `Longest run: ${longest.dist.toFixed(1)} km on ${longestDateStr}. `;
+      grText += `Μεγαλύτερο τρέξιμο: ${longest.dist.toFixed(1)} km στις ${longestDateStr}. `;
+    }
+
+    enText += `Session mix (last 60 days): ${easyCount} easy/long vs ${qualCount} quality (tempo/interval / hard). `;
+    grText += `Μοίρασμα προπονήσεων (τελευταίες 60 ημέρες): ${easyCount} easy/long vs ${qualCount} quality (tempo/interval / δυνατές). `;
+
+    if (easyPaceText) {
+      enText += `Typical easy pace: about ${easyPaceText} min/km.`;
+      grText += `Τυπικός easy ρυθμός: περίπου ${easyPaceText} λεπτά/χλμ.`;
+    }
+
+    runningAnalysisEl.textContent = coachLang === 'gr' ? `Ανάλυση: ${grText}` : `Analysis: ${enText}`;
+  }
+
+  function updateAnalytics(runs) {
     updateThisWeekStats(runs);
     updateStreaks(runs);
     updateCharts(runs);
@@ -2248,29 +1827,19 @@
     updateRunningAnalysis(runs);
   }
 
-
-  // Supabase sync
   async function loadFromSupabase(userId) {
     syncStatus.textContent = 'Loading...';
     try {
-      const { data, error } = await supabase
-        .from('runs')
-        .select('date, data')
-        .eq('sync_id', userId);
-
+      const { data, error } = await supabase.from('runs').select('date, data').eq('sync_id', userId);
       if (error) {
         console.error('Supabase load error:', error);
         syncStatus.textContent = 'Error loading';
         alert('Supabase load error: ' + (error.message || JSON.stringify(error)));
         return;
       }
-
       const local = getStorage();
-      data.forEach(row => {
-        local[row.date] = row.data;
-      });
+      data.forEach(row => { local[row.date] = row.data; });
       setStorage(local);
-
       renderCalendar();
       syncStatus.textContent = 'Loaded';
     } catch (e) {
@@ -2285,26 +1854,16 @@
     friendId = friendSyncId;
     syncStatus.textContent = 'Loading friend...';
     try {
-      const { data, error } = await supabase
-        .from('runs')
-        .select('date, data')
-        .eq('sync_id', friendSyncId);
-
+      const { data, error } = await supabase.from('runs').select('date, data').eq('sync_id', friendSyncId);
       if (error) {
         console.error('Supabase friend load error:', error);
         syncStatus.textContent = 'Error loading friend';
         alert('Could not load friend data: ' + (error.message || JSON.stringify(error)));
         return;
       }
-
       friendRunsCache = {};
-      data.forEach(row => {
-        friendRunsCache[row.date] = row.data;
-      });
-
-      if (shareCodeEl) {
-        shareCodeEl.textContent = '';
-      }
+      data.forEach(row => { friendRunsCache[row.date] = row.data; });
+      if (shareCodeEl) shareCodeEl.textContent = '';
       authStatus.textContent = "Viewing friend calendar (read-only)";
       renderCalendar();
       syncStatus.textContent = 'Friend loaded';
@@ -2320,16 +1879,9 @@
     try {
       const { error } = await supabase
         .from('runs')
-        .upsert(
-          { sync_id: userId, date: dateKey, data: runObj },
-          { onConflict: 'sync_id,date' }
-        );
-      if (error) {
-        console.error(error);
-        syncStatus.textContent = 'Sync error';
-      } else {
-        syncStatus.textContent = 'Synced';
-      }
+        .upsert({ sync_id: userId, date: dateKey, data: runObj }, { onConflict: 'sync_id,date' });
+      syncStatus.textContent = error ? 'Sync error' : 'Synced';
+      if (error) console.error(error);
     } catch (e) {
       console.error(e);
       syncStatus.textContent = 'Sync error';
@@ -2339,17 +1891,9 @@
   async function deleteRunFromSupabase(userId, dateKey) {
     syncStatus.textContent = 'Syncing...';
     try {
-      const { error } = await supabase
-        .from('runs')
-        .delete()
-        .eq('sync_id', userId)
-        .eq('date', dateKey);
-      if (error) {
-        console.error(error);
-        syncStatus.textContent = 'Sync error';
-      } else {
-        syncStatus.textContent = 'Synced';
-      }
+      const { error } = await supabase.from('runs').delete().eq('sync_id', userId).eq('date', dateKey);
+      syncStatus.textContent = error ? 'Sync error' : 'Synced';
+      if (error) console.error(error);
     } catch (e) {
       console.error(e);
       syncStatus.textContent = 'Sync error';
@@ -2359,36 +1903,24 @@
   function updateAuthUI() {
     if (currentUser) {
       authStatus.textContent = `Logged in as ${currentUser.email}`;
-      if (shareCodeEl) {
-        shareCodeEl.textContent = `Share code: ${currentUser.id}`;
-      }
+      if (shareCodeEl) shareCodeEl.textContent = `Share code: ${currentUser.id}`;
       logoutBtn.style.display = 'inline-block';
     } else {
       authStatus.textContent = 'Not logged in';
-      if (shareCodeEl) {
-        shareCodeEl.textContent = '';
-      }
+      if (shareCodeEl) shareCodeEl.textContent = '';
       logoutBtn.style.display = 'none';
     }
   }
 
-  // Auth
   loginBtn.addEventListener('click', async () => {
     const email = loginEmailEl.value.trim();
     const password = loginPasswordEl.value;
-    if (!email || !password) {
-      alert('Enter email and password.');
-      return;
-    }
+    if (!email || !password) { alert('Enter email and password.'); return; }
 
     authStatus.textContent = 'Logging in...';
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      console.error(error);
-      authStatus.textContent = 'Login error';
-      alert(error.message);
-      return;
-    }
+    if (error) { console.error(error); authStatus.textContent = 'Login error'; alert(error.message); return; }
+
     if (data && data.session && data.session.user) {
       currentUser = data.session.user;
       updateAuthUI();
@@ -2399,19 +1931,11 @@
   signupBtn.addEventListener('click', async () => {
     const email = loginEmailEl.value.trim();
     const password = loginPasswordEl.value;
-    if (!email || !password) {
-      alert('Enter email and password to sign up.');
-      return;
-    }
+    if (!email || !password) { alert('Enter email and password to sign up.'); return; }
 
     authStatus.textContent = 'Creating account...';
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      console.error(error);
-      authStatus.textContent = 'Sign up error';
-      alert(error.message);
-      return;
-    }
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) { console.error(error); authStatus.textContent = 'Sign up error'; alert(error.message); return; }
 
     alert('Account created. If email confirmation is required, confirm it, then log in.');
     authStatus.textContent = 'Account created. Log in.';
@@ -2428,13 +1952,9 @@
     renderCalendar();
   });
 
-  // Friend view buttons
   viewFriendBtn.addEventListener('click', async () => {
     const code = friendCodeInput.value.trim();
-    if (!code) {
-      alert('Paste a friend code first (they can find it under "Share code" when logged in).');
-      return;
-    }
+    if (!code) { alert('Paste a friend code first (they can find it under "Share code" when logged in).'); return; }
     await loadFriendFromSupabase(code);
   });
 
@@ -2451,16 +1971,9 @@
     }
   });
 
-  // PDF export
   pdfBtn.addEventListener('click', () => {
-    if (!currentUser) {
-      alert('Log in to export your runs.');
-      return;
-    }
-    if (!jsPDF) {
-      alert('PDF library not loaded.');
-      return;
-    }
+    if (!currentUser) { alert('Log in to export your runs.'); return; }
+    if (!jsPDF) { alert('PDF library not loaded.'); return; }
 
     const doc = new jsPDF();
     const runs = getStorage();
@@ -2475,10 +1988,7 @@
     doc.text(`Month: ${monthName}`, 10, 20);
     doc.text(`User: ${currentUser.email}`, 10, 26);
 
-    let totalPlanned = 0;
-    let totalDone = 0;
-    let runCount = 0;
-
+    let totalPlanned = 0, totalDone = 0, runCount = 0;
     const entries = [];
 
     Object.keys(runs).forEach(key => {
@@ -2486,10 +1996,7 @@
       if (d.getFullYear() === year && d.getMonth() === month) {
         const r = runs[key];
         if (r.plannedDistance) totalPlanned += r.plannedDistance;
-        if (r.actualDistance) {
-          totalDone += r.actualDistance;
-          runCount++;
-        }
+        if (r.actualDistance) { totalDone += r.actualDistance; runCount++; }
         entries.push({ key, date: d, run: r });
       }
     });
@@ -2517,67 +2024,39 @@
       const rpe = r.rpe != null ? String(r.rpe) : '-';
       const line = `${day}  ${type}  ${pl.padStart(6,' ')}  ${ac.padStart(6,' ')}  ${pace.padStart(5,' ')}  ${rpe.padStart(3,' ')}  ${(r.notes||'').slice(0,40)}`;
 
-      if (y > 280) {
-        doc.addPage();
-        y = 20;
-      }
+      if (y > 280) { doc.addPage(); y = 20; }
       doc.text(line, 10, y);
       y += 5;
     });
 
-    const fileName = `RunCalendar_${year}_${month+1}.pdf`;
-    doc.save(fileName);
+    doc.save(`RunCalendar_${year}_${month+1}.pdf`);
   });
 
-  // TRAINING PLANS
   function applyTrainingPlan() {
-    if (friendMode) {
-      alert('You cannot apply a plan while viewing a friend. Switch back to your calendar.');
-      return;
-    }
-    if (!currentUser) {
-      alert('Log in to apply a training plan.');
-      return;
-    }
+    if (friendMode) { alert('You cannot apply a plan while viewing a friend. Switch back to your calendar.'); return; }
+    if (!currentUser) { alert('Log in to apply a training plan.'); return; }
+
     const planId = planSelect.value;
-    if (planId === 'none') {
-      alert('Select a training plan first.');
-      return;
-    }
+    if (planId === 'none') { alert('Select a training plan first.'); return; }
     const plan = TRAINING_PLANS[planId];
-    if (!plan) {
-      alert('Unknown plan.');
-      return;
-    }
+    if (!plan) { alert('Unknown plan.'); return; }
 
     const start = planStartDateInput.value;
     const race = planRaceDateInput.value;
-    if (!start || !race) {
-      alert('Choose both start date and race date.');
-      return;
-    }
+    if (!start || !race) { alert('Choose both start date and race date.'); return; }
 
     const [ys, ms, ds] = start.split('-').map(Number);
     const [yr, mr, dr] = race.split('-').map(Number);
-    if (!ys || !ms || !ds || !yr || !mr || !dr) {
-      alert('Invalid dates.');
-      return;
-    }
-
     const startDate = new Date(ys, ms - 1, ds);
     const raceDate = new Date(yr, mr - 1, dr);
 
-    if (raceDate < startDate) {
-      alert('Race date must be after start date.');
-      return;
-    }
+    if (raceDate < startDate) { alert('Race date must be after start date.'); return; }
 
-    const diffMs = raceDate - startDate;
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+    const diffDays = Math.floor((raceDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
     const totalWeeks = Math.max(1, Math.ceil(diffDays / 7));
 
     const daysPerWeek = parseInt(planDaysPerWeekSelect.value, 10) || 3;
-    const activeDays = new Set( (plan.daysOrder || []).slice(0, daysPerWeek) );
+    const activeDays = new Set((plan.daysOrder || []).slice(0, daysPerWeek));
 
     const runs = getStorage();
 
@@ -2586,16 +2065,13 @@
         const dayDate = new Date(startDate);
         dayDate.setDate(startDate.getDate() + week * 7 + dow);
         if (dayDate > raceDate) continue;
-
         if (!activeDays.has(dow)) continue;
 
         const key = formatDateKey(dayDate);
         const { type, dist, pace, notes } = plan.generator(week, totalWeeks, dow);
 
         if (!runs[key]) {
-          if (type === 'Rest' && (!dist || dist === 0)) {
-            continue;
-          }
+          if (type === 'Rest' && (!dist || dist === 0)) continue;
           runs[key] = {
             type: type || 'Rest',
             plannedDistance: dist || null,
@@ -2619,21 +2095,11 @@
     if (currentUser) {
       (async () => {
         syncStatus.textContent = 'Syncing plan...';
-        const upserts = [];
-        Object.keys(runs).forEach(dateKey => {
-          const r = runs[dateKey];
-          upserts.push({ sync_id: currentUser.id, date: dateKey, data: r });
-        });
+        const upserts = Object.keys(runs).map(dateKey => ({ sync_id: currentUser.id, date: dateKey, data: runs[dateKey] }));
         try {
-          const { error } = await supabase
-            .from('runs')
-            .upsert(upserts, { onConflict: 'sync_id,date' });
-          if (error) {
-            console.error(error);
-            syncStatus.textContent = 'Sync error';
-          } else {
-            syncStatus.textContent = 'Synced';
-          }
+          const { error } = await supabase.from('runs').upsert(upserts, { onConflict: 'sync_id,date' });
+          syncStatus.textContent = error ? 'Sync error' : 'Synced';
+          if (error) console.error(error);
         } catch (e) {
           console.error(e);
           syncStatus.textContent = 'Sync error';
@@ -2645,20 +2111,11 @@
   applyPlanBtn.addEventListener('click', applyTrainingPlan);
 
   async function clearTrainingPlan() {
-    if (friendMode) {
-      alert('You cannot clear a plan while viewing a friend. Switch back to your calendar.');
-      return;
-    }
-    if (!currentUser) {
-      alert('Log in to clear a plan.');
-      return;
-    }
+    if (friendMode) { alert('You cannot clear a plan while viewing a friend. Switch back to your calendar.'); return; }
+    if (!currentUser) { alert('Log in to clear a plan.'); return; }
 
     const planId = planSelect.value;
-    if (planId === 'none') {
-      alert('Select the plan you want to clear from the dropdown.');
-      return;
-    }
+    if (planId === 'none') { alert('Select the plan you want to clear from the dropdown.'); return; }
 
     const runs = getStorage();
     const datesToDelete = [];
@@ -2671,57 +2128,31 @@
       }
     });
 
-    if (datesToDelete.length === 0) {
-      setStorage(runs);
-      renderCalendar();
-      alert('No plan days found to clear (or all have logged runs).');
-      return;
-    }
-
     setStorage(runs);
     renderCalendar();
 
-    if (currentUser && datesToDelete.length > 0) {
-      syncStatus.textContent = 'Clearing plan...';
-      try {
-        const { error } = await supabase
-          .from('runs')
-          .delete()
-          .eq('sync_id', currentUser.id)
-          .in('date', datesToDelete);
+    if (!datesToDelete.length) { alert('No plan days found to clear (or all have logged runs).'); return; }
 
-        if (error) {
-          console.error(error);
-          syncStatus.textContent = 'Sync error';
-          alert('Error clearing plan from server.');
-        } else {
-          syncStatus.textContent = 'Synced';
-        }
-      } catch (e) {
-        console.error(e);
-        syncStatus.textContent = 'Sync error';
-        alert('Error clearing plan from server.');
-      }
+    syncStatus.textContent = 'Clearing plan...';
+    try {
+      const { error } = await supabase.from('runs').delete().eq('sync_id', currentUser.id).in('date', datesToDelete);
+      syncStatus.textContent = error ? 'Sync error' : 'Synced';
+      if (error) { console.error(error); alert('Error clearing plan from server.'); }
+    } catch (e) {
+      console.error(e);
+      syncStatus.textContent = 'Sync error';
+      alert('Error clearing plan from server.');
     }
   }
 
   clearPlanBtn.addEventListener('click', clearTrainingPlan);
 
   async function forceClearTrainingPlan() {
-    if (friendMode) {
-      alert('You cannot force clear while viewing a friend. Switch back to your calendar.');
-      return;
-    }
-    if (!currentUser) {
-      alert('Log in to force clear a plan.');
-      return;
-    }
+    if (friendMode) { alert('You cannot force clear while viewing a friend. Switch back to your calendar.'); return; }
+    if (!currentUser) { alert('Log in to force clear a plan.'); return; }
 
     const planId = planSelect.value;
-    if (planId === 'none') {
-      alert('Select the plan you want to force clear from the dropdown.');
-      return;
-    }
+    if (planId === 'none') { alert('Select the plan you want to force clear from the dropdown.'); return; }
 
     const confirmText =
       '⚠ WARNING ⚠\n\n' +
@@ -2729,9 +2160,7 @@
       'This cannot be undone.\n\n' +
       'Do you really want to continue?';
 
-    if (!window.confirm(confirmText)) {
-      return;
-    }
+    if (!window.confirm(confirmText)) return;
 
     const runs = getStorage();
     const datesToDelete = [];
@@ -2744,31 +2173,16 @@
       }
     });
 
-    if (datesToDelete.length === 0) {
-      setStorage(runs);
-      renderCalendar();
-      alert('No days found with this planId.');
-      return;
-    }
-
     setStorage(runs);
     renderCalendar();
 
+    if (!datesToDelete.length) { alert('No days found with this planId.'); return; }
+
     syncStatus.textContent = 'Force clearing plan...';
     try {
-      const { error } = await supabase
-        .from('runs')
-        .delete()
-        .eq('sync_id', currentUser.id)
-        .in('date', datesToDelete);
-
-      if (error) {
-        console.error(error);
-        syncStatus.textContent = 'Sync error';
-        alert('Error force clearing plan from server.');
-      } else {
-        syncStatus.textContent = 'Synced';
-      }
+      const { error } = await supabase.from('runs').delete().eq('sync_id', currentUser.id).in('date', datesToDelete);
+      syncStatus.textContent = error ? 'Sync error' : 'Synced';
+      if (error) { console.error(error); alert('Error force clearing plan from server.'); }
     } catch (e) {
       console.error(e);
       syncStatus.textContent = 'Sync error';
@@ -2778,15 +2192,13 @@
 
   forceClearPlanBtn.addEventListener('click', forceClearTrainingPlan);
 
-  // Coach language toggle
   coachLangSelect.addEventListener('change', () => {
     coachLang = coachLangSelect.value;
     localStorage.setItem('runCalendarCoachLang', coachLang);
-    const runs = getStorage();
-    updateCoach(runs);
+    updateCoach(getStorage());
+    updateRunningAnalysis(getStorage());
   });
 
-  // Session on load
   (async () => {
     const { data, error } = await supabase.auth.getSession();
     if (!error && data.session && data.session.user) {
@@ -2797,6 +2209,9 @@
       renderCalendar();
     }
   })();
+
+})();
 </script>
+
 </body>
 </html>
