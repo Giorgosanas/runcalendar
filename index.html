@@ -671,7 +671,9 @@
       <button id="forceClearPlanBtn" style="background:transparent;border:1px solid var(--danger);color:var(--danger);">
         Force clear
       </button>
+	<button id="exportICSBtn" class="btn">Export Plan to Calendar (.ics)</button>
     </div>
+	
 
     <div class="toolbar-group">
       <label for="colorThemeSelect">Theme</label>
@@ -2211,6 +2213,83 @@
   })();
 
 })();
+
+	// ===== Calendar export (.ics) =====
+
+// TODO: Replace this with YOUR real plan data from the app later.
+const trainingEvents = [
+  { date: "2026-01-05", title: "Easy Run", desc: "6 km easy" },
+  { date: "2026-01-07", title: "Tempo/Intervals", desc: "6 km total: 4×400m hard, 200m easy jog" },
+  { date: "2026-01-09", title: "Easy + Strides", desc: "5 km easy + 4×20s strides" },
+  { date: "2026-01-10", title: "Long Run", desc: "11 km long (easy)" },
+];
+
+function pad(n){ return String(n).padStart(2, "0"); }
+
+function formatLocalDT(dateStr, hh=8, mm=0) {
+  const [y,m,d] = dateStr.split("-").map(Number);
+  return `${y}${pad(m)}${pad(d)}T${pad(hh)}${pad(mm)}00`;
+}
+
+function escapeICS(text="") {
+  return String(text)
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+function buildICS(events) {
+  const now = new Date();
+  const stamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth()+1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
+
+  let ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//RunCalendar//Training Plan//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH"
+  ];
+
+  for (const ev of events) {
+    const dtStart = formatLocalDT(ev.date, 8, 0); // 08:00
+    const dtEnd   = formatLocalDT(ev.date, 9, 0); // 09:00
+    const uid = `${ev.date}-${Math.random().toString(16).slice(2)}@runcalendar`;
+
+    ics.push(
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:${escapeICS(ev.title)}`,
+      `DESCRIPTION:${escapeICS(ev.desc)}`,
+      "END:VEVENT"
+    );
+  }
+
+  ics.push("END:VCALENDAR");
+  return ics.join("\r\n");
+}
+
+function downloadICS(filename, content) {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// IMPORTANT: this must run after the button exists in the page
+document.getElementById("exportICSBtn")?.addEventListener("click", () => {
+  const ics = buildICS(trainingEvents);
+  downloadICS("RunCalendar-Plan.ics", ics);
+});
+
 </script>
 
 </body>
